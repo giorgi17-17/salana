@@ -1,0 +1,266 @@
+.stepsSection {
+  padding: var(--spacing-xl) 0;
+  background-color: var(--background);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background accent */
+.backgroundAccent {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.accentTop {
+  top: -200px;
+  right: -100px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(
+    circle,
+    rgba(191, 168, 101, 0.1),
+    rgba(27, 59, 47, 0.05)
+  );
+}
+
+.accentBottom {
+  bottom: -250px;
+  left: -150px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle,
+    rgba(191, 168, 101, 0.08),
+    rgba(27, 59, 47, 0.02)
+  );
+}
+
+/* Section header */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+  position: relative;
+  z-index: 2;
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.titleHighlight {
+  color: var(--primary);
+  position: relative;
+  display: inline-block;
+}
+
+.titleHighlight::after {
+  content: "";
+  position: absolute;
+  bottom: 0.1em;
+  left: 0;
+  width: 100%;
+  height: 0.1em;
+  background-color: var(--primary);
+  opacity: 0.3;
+  z-index: -1;
+}
+
+.sectionSubtitle {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* Divider */
+.divider {
+  width: 80px;
+  height: 3px;
+  background-color: var(--primary);
+  margin: var(--spacing-md) auto var(--spacing-xl);
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.divider::before {
+  left: -15px;
+}
+
+.divider::after {
+  right: -15px;
+}
+
+/* Steps grid */
+.stepsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-xl);
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .stepsGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+  }
+}
+
+/* Step container */
+.stepContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+/* Step number */
+.stepNumber {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-md);
+  position: relative;
+  z-index: 3;
+  background-color: var(--background-darker);
+}
+
+/* Icon container */
+.iconContainer {
+  position: relative;
+  margin-bottom: var(--spacing-lg);
+}
+
+.iconCircle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: rgba(191, 168, 101, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  position: relative;
+  transition: all var(--transition-medium);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+}
+
+.stepContainer:hover .iconCircle {
+  transform: scale(1.05);
+  background-color: rgba(191, 168, 101, 0.12);
+  box-shadow: 0 0 20px rgba(191, 168, 101, 0.1);
+}
+
+/* Connector line between steps */
+.connector {
+  display: none;
+  position: absolute;
+  top: 50px;
+  left: calc(50% + 50px);
+  height: 2px;
+  background-color: rgba(191, 168, 101, 0.3);
+  width: calc(100% - 100px);
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  .connector {
+    display: block;
+  }
+}
+
+/* Pulse effect around icon */
+.iconPulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(191, 168, 101, 0.3);
+  animation: pulse 3s infinite;
+  opacity: 0.6;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+}
+
+/* Text content */
+.stepTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text);
+}
+
+.stepDescription {
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* Animation */
+.animated {
+  animation: fadeInUp 0.8s ease-out both;
+}
+
+.delay1 {
+  animation-delay: 0.2s;
+}
+
+.delay2 {
+  animation-delay: 0.4s;
+}
+
+.delay3 {
+  animation-delay: 0.6s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

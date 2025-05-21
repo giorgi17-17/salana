@@ -1,0 +1,180 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--border-radius-md);
+  transition: all var(--transition-medium);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  cursor: pointer;
+  text-align: center;
+  min-width: 120px;
+}
+
+@media (max-width: 480px) {
+  .button {
+    min-width: 100px;
+  }
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button:active {
+  transform: translateY(0px);
+}
+
+/* Primary button */
+.primary {
+  background-color: var(--primary);
+  color: var(--background-darker);
+  box-shadow: var(--shadow-md);
+}
+
+.primary:hover {
+  background-color: var(--primary-light);
+  box-shadow: 0 0 15px rgba(191, 168, 101, 0.5), var(--shadow-md);
+}
+
+/* Secondary button */
+.secondary {
+  background-color: var(--background-lighter);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.secondary:hover {
+  background-color: rgba(191, 168, 101, 0.15);
+  color: var(--primary-light);
+}
+
+/* Outlined button */
+.outlined {
+  background-color: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  padding: calc(0.75rem - 2px) calc(1.5rem - 2px);
+}
+
+.outlined:hover {
+  background-color: rgba(191, 168, 101, 0.1);
+  border-color: var(--primary-light);
+  color: var(--primary-light);
+}
+
+/* Large button */
+.large {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+}
+
+/* Full width button */
+.fullWidth {
+  width: 100%;
+}
+
+/* Button with icon */
+.withIcon {
+  gap: 0.5rem;
+}
+
+/* Icon position */
+.iconLeft .icon {
+  order: -1;
+}
+
+.iconRight .icon {
+  order: 1;
+}
+
+/* Glow effect button */
+.glow {
+  position: relative;
+}
+
+.glow::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle,
+    rgba(191, 168, 101, 0.4) 0%,
+    rgba(191, 168, 101, 0) 70%
+  );
+  mix-blend-mode: overlay;
+  opacity: 0;
+  transition: opacity var(--transition-medium);
+  z-index: -1;
+}
+
+.glow:hover::after {
+  opacity: 1;
+}
+
+/* Animated button with overlay effect */
+.animated {
+  position: relative;
+  z-index: 1;
+}
+
+.animated::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, var(--primary-light), var(--primary));
+  z-index: -1;
+  transition: transform var(--transition-medium);
+  transform: scaleX(0);
+  transform-origin: right;
+}
+
+.animated:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Disabled state */
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .button {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9375rem;
+  }
+
+  .large {
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .large {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .fullWidth {
+    min-width: 100%;
+  }
+}

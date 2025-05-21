@@ -1,0 +1,382 @@
+.servicesSection {
+  padding: var(--spacing-xl) 0;
+  background-color: var(--background);
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .servicesSection {
+    padding: var(--spacing-lg) 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .servicesSection {
+    padding: var(--spacing-md) 0;
+  }
+}
+
+/* Section header styles */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .sectionHeader {
+    margin-bottom: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .sectionHeader {
+    margin-bottom: var(--spacing-md);
+  }
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: var(--spacing-sm);
+  position: relative;
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .sectionTitle {
+    font-size: 2.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sectionTitle {
+    font-size: 1.875rem;
+  }
+}
+
+.titleHighlight {
+  color: var(--primary);
+}
+
+.sectionSubtitle {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .sectionSubtitle {
+    font-size: 1.125rem;
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sectionSubtitle {
+    font-size: 1rem;
+    max-width: 100%;
+  }
+}
+
+/* Divider styles */
+.divider {
+  width: 80px;
+  height: 3px;
+  background-color: var(--primary);
+  margin: var(--spacing-md) auto;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.divider::before {
+  left: -10px;
+}
+
+.divider::after {
+  right: -10px;
+}
+
+@media (max-width: 480px) {
+  .divider {
+    width: 60px;
+    margin: var(--spacing-sm) auto;
+  }
+
+  .divider::before,
+  .divider::after {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+/* Services grid */
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--spacing-lg);
+}
+
+@media (min-width: 640px) {
+  .servicesGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+}
+
+@media (min-width: 1024px) {
+  .servicesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .servicesGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Service card */
+.serviceCard {
+  background-color: var(--background-lighter);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-medium);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid rgba(191, 168, 101, 0.1);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+}
+
+.serviceCard:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(191, 168, 101, 0.1);
+  border-color: rgba(191, 168, 101, 0.3);
+}
+
+@media (max-width: 768px) {
+  .serviceCard:hover {
+    transform: translateY(-5px);
+  }
+}
+
+.cardContent {
+  padding: var(--spacing-md);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 480px) {
+  .cardContent {
+    padding: var(--spacing-sm);
+  }
+}
+
+/* Card media */
+.cardMedia {
+  height: 200px;
+  background-color: var(--background);
+  position: relative;
+  overflow: hidden;
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-medium);
+}
+
+.serviceCard:hover .cardImage {
+  transform: scale(1.05);
+}
+
+/* Icon container */
+.iconContainer {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(191, 168, 101, 0.1);
+  border-radius: 50%;
+  margin: 0 auto var(--spacing-md);
+  transition: all var(--transition-medium);
+  border: 2px solid rgba(191, 168, 101, 0.2);
+}
+
+.serviceCard:hover .iconContainer {
+  /* Transform is now handled with inline styles */
+}
+
+@media (max-width: 480px) {
+  .iconContainer {
+    width: 60px;
+    height: 60px;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .serviceCard:hover .iconContainer {
+    transform: scale(1.05) rotate(3deg);
+  }
+}
+
+.iconCircle {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(27, 59, 47, 0.6);
+}
+
+@media (max-width: 480px) {
+  .iconCircle {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* Text content */
+.serviceName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: var(--spacing-sm);
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .serviceName {
+    font-size: 1.375rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .serviceName {
+    font-size: 1.25rem;
+    margin-bottom: calc(var(--spacing-sm) / 2);
+  }
+}
+
+.serviceDescription {
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .serviceDescription {
+    font-size: 0.9375rem;
+    margin-bottom: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .serviceDescription {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+}
+
+/* Category badge */
+.categoryBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: var(--spacing-sm);
+}
+
+@media (max-width: 480px) {
+  .categoryBadge {
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8125rem;
+    margin-bottom: calc(var(--spacing-sm) / 2);
+  }
+}
+
+/* Card footer */
+.cardFooter {
+  margin-top: auto;
+  text-align: center;
+  padding-top: var(--spacing-sm);
+}
+
+.exploreLink {
+  font-weight: 500;
+  font-size: 0.9375rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all var(--transition-medium);
+}
+
+.exploreLink:hover {
+  /* Gap is now handled with inline styles */
+}
+
+@media (max-width: 480px) {
+  .exploreLink {
+    font-size: 0.875rem;
+  }
+}
+
+/* Animation for service cards */
+.animated {
+  animation: fadeUp 0.6s ease-out both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* For delayed animations */
+.delay1 {
+  animation-delay: 0.1s;
+}
+
+.delay2 {
+  animation-delay: 0.2s;
+}
+
+.delay3 {
+  animation-delay: 0.3s;
+}
+
+.delay4 {
+  animation-delay: 0.4s;
+}
+
+@media (prefers-reduced-motion) {
+  .animated {
+    animation: none;
+  }
+}
