@@ -1,0 +1,106 @@
+.booking-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-lg) 0;
+}
+
+.booking-container h1 {
+  color: var(--primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.booking-container p {
+  margin-bottom: var(--spacing-md);
+  color: var(--text-muted);
+}
+
+.booking-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  background-color: var(--background-lighter);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: var(--spacing-xs);
+  font-weight: 500;
+  color: var(--primary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.75rem;
+  border: 1px solid rgba(191, 168, 101, 0.3);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--background-darker);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Make notes textarea span full width */
+.form-group:last-of-type {
+  grid-column: 1 / -1;
+}
+
+/* Submit button container should span full width */
+.booking-form button {
+  grid-column: 1 / -1;
+  background-color: var(--primary);
+  color: var(--background-darker);
+  padding: 1rem;
+  border-radius: var(--border-radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  margin-top: var(--spacing-sm);
+}
+
+.booking-form button:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.booking-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.message {
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  background-color: rgba(191, 168, 101, 0.2);
+  color: var(--primary-light);
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .booking-form {
+    grid-template-columns: 1fr;
+  }
+}

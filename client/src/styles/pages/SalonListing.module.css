@@ -1,0 +1,219 @@
+.salonListingContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-lg) 0;
+}
+
+.pageTitle {
+  color: var(--primary);
+  margin-bottom: var(--spacing-xs);
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.pageDescription {
+  margin-bottom: var(--spacing-lg);
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 1.1rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Filters */
+.filtersContainer {
+  margin-bottom: var(--spacing-lg);
+  background-color: var(--background-lighter);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+}
+
+.searchContainer {
+  margin-bottom: var(--spacing-md);
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--background-darker);
+  color: var(--text);
+  border: 1px solid rgba(191, 168, 101, 0.3);
+  font-size: 1rem;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.categoryFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.categoryButton {
+  background-color: var(--background-darker);
+  color: var(--text-muted);
+  border: 1px solid rgba(191, 168, 101, 0.3);
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.categoryButton:hover {
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.categoryButton.active {
+  background-color: var(--primary);
+  color: var(--background-darker);
+  border-color: var(--primary);
+  font-weight: 600;
+}
+
+/* Section Titles */
+.sectionTitle {
+  color: var(--primary);
+  margin-bottom: var(--spacing-md);
+  font-size: 1.5rem;
+  border-bottom: 1px solid rgba(191, 168, 101, 0.2);
+  padding-bottom: var(--spacing-xs);
+}
+
+.featuredSection,
+.allSalonsSection {
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Salon Grid */
+.salonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: var(--spacing-md);
+}
+
+/* Salon Card */
+.salonCard {
+  background-color: var(--background-lighter);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  transition: all var(--transition-medium);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.salonCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.salonImageContainer {
+  position: relative;
+}
+
+.salonImagePlaceholder {
+  height: 200px;
+  background-color: var(--background-darker);
+  position: relative;
+}
+
+.salonRating {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background-color: var(--primary);
+  color: var(--background-darker);
+  border-radius: var(--border-radius-sm);
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.ratingValue {
+  margin-right: 0.25rem;
+}
+
+.reviewCount {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.salonInfo {
+  padding: var(--spacing-md);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.salonName {
+  color: var(--primary);
+  margin-bottom: var(--spacing-xs);
+  font-size: 1.3rem;
+}
+
+.salonDescription {
+  color: var(--text);
+  margin-bottom: var(--spacing-sm);
+  flex: 1;
+}
+
+.salonAddress {
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.9rem;
+}
+
+.servicesPreview {
+  margin-top: auto;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.serviceTag {
+  display: inline-block;
+}
+
+.salonActions {
+  padding: var(--spacing-md);
+  display: flex;
+  gap: var(--spacing-sm);
+  border-top: 1px solid rgba(191, 168, 101, 0.2);
+}
+
+.detailsLink,
+.bookingLink {
+  flex: 1;
+}
+
+.detailsLink button,
+.bookingLink button {
+  width: 100%;
+}
+
+.noResults {
+  text-align: center;
+  padding: var(--spacing-lg);
+  color: var(--text-muted);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .salonGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .categoryFilters {
+    justify-content: center;
+  }
+}

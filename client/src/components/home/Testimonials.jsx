@@ -2,7 +2,7 @@ import styles from "../../styles/components/Testimonials.module.css";
 
 function Testimonials() {
   const testimonials = [
-    {
+    { 
       id: 1,
       name: "Emma Thompson",
       image: "/src/assets/testimonial-1.jpg",

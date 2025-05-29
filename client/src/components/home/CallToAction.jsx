@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import styles from "../../styles/components/CallToAction.module.css";
+import buttonStyles from "../../styles/components/Button.module.css";
 import { useState, useEffect } from "react";
 
 function CallToAction() {
@@ -36,17 +38,27 @@ function CallToAction() {
 
       <div className="container">
         <div className={styles.ctaContainer}>
-          <h2 className={styles.ctaHeading}>
-            დაჯავშნეთ თქვენი მომდევნო სილამაზის ან ჯანმრთელობის სეანსი
-            თავდაჯერებულად.
-          </h2>
+          <h2 className={styles.ctaTitle}>მზად ხართ ტრანსფორმაციისთვის?</h2>
           <p className={styles.ctaText}>
-            შემოუერთდით ათასობით კმაყოფილ კლიენტს, რომლებმაც Salana-ს საშუალებით
-            იპოვეს თავიანთი იდეალური სერვისის მიმწოდებლები.
+            დაჯავშნეთ თქვენი ვიზიტი დღესვე და ისარგებლეთ ჩვენი პროფესიონალი
+            სპეციალისტების მომსახურებით.
           </p>
-          <button className={styles.premiumButton}>
-            დაიწყეთ Salana-სთან ერთად
-          </button>
+          <div className={styles.ctaButtonGroup}>
+            <Link to="/booking">
+              <button
+                className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.large}`}
+              >
+                დაჯავშნე ახლავე
+              </button>
+            </Link>
+            <Link to="/services">
+              <button
+                className={`${buttonStyles.button} ${buttonStyles.secondary} ${buttonStyles.large}`}
+              >
+                ნახეთ სერვისები
+              </button>
+            </Link>
+          </div>
 
           {/* Accent dots decoration - hide on smallest screens */}
           {screenSize !== "mobile" && (

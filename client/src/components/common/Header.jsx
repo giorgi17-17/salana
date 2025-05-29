@@ -49,14 +49,14 @@ function Header() {
 
           {/* Desktop Navigation */}
           <nav className={styles.navMenu}>
-            <Link
+            {/* <Link
               to="/"
               className={`${styles.navLink} ${
                 isActive("/") ? styles.active : ""
               }`}
             >
               მთავარი
-            </Link>
+            </Link> */}
             <Link
               to="/services"
               className={`${styles.navLink} ${
@@ -65,14 +65,14 @@ function Header() {
             >
               სერვისები
             </Link>
-            <Link
+            {/* <Link
               to="/professionals"
               className={`${styles.navLink} ${
                 isActive("/professionals") ? styles.active : ""
               }`}
             >
               სპეციალისტები
-            </Link>
+            </Link> */}
             <Link
               to="/about"
               className={`${styles.navLink} ${
@@ -89,15 +89,31 @@ function Header() {
             >
               კონტაქტი
             </Link>
+            <Link
+              to="/pricing"
+              className={`${styles.navLink} ${
+                isActive("/pricing") ? styles.active : ""
+              }`}
+            >
+              ბიზნესებისთვის
+            </Link>
+            {/* <Link
+              to="/booking"
+              className={`${styles.navLink} ${
+                isActive("/booking") ? styles.active : ""
+              }`}
+            >
+              დაჯავშნა
+            </Link> */}
           </nav>
 
           {/* Action Buttons */}
           <div className={styles.actionButtons}>
-            <Link to="/services">
+            <Link to="/booking">
               <button
                 className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.glow}`}
               >
-                სერვისების პოვნა
+                დაჯავშნე ახლავე
               </button>
             </Link>
           </div>
@@ -207,18 +223,36 @@ function Header() {
           >
             კონტაქტი
           </Link>
+          <Link
+            to="/pricing"
+            className={`${styles.mobileNavLink} ${
+              isActive("/pricing") ? styles.active : ""
+            }`}
+            onClick={closeMobileMenu}
+          >
+            ფასები
+          </Link>
+          <Link
+            to="/booking"
+            className={`${styles.mobileNavLink} ${
+              isActive("/booking") ? styles.active : ""
+            }`}
+            onClick={closeMobileMenu}
+          >
+            დაჯავშნა
+          </Link>
         </nav>
 
         <div className={styles.mobileActionButtons}>
           <Link
-            to="/services"
+            to="/booking"
             onClick={closeMobileMenu}
             style={{ width: "100%" }}
           >
             <button
               className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.glow} ${buttonStyles.fullWidth}`}
             >
-              სერვისების პოვნა
+              დაჯავშნე ახლავე
             </button>
           </Link>
         </div>

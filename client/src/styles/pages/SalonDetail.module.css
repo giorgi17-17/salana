@@ -1,0 +1,457 @@
+/* Salon Detail Container */
+.salonDetailContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-lg) 0;
+}
+
+/* Back Navigation */
+.backNavigation {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+  font-size: 0.9rem;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  padding: var(--spacing-xs) 0;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.backButton:hover {
+  color: var(--text);
+}
+
+.breadcrumb {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.breadcrumb:hover {
+  color: var(--primary);
+}
+
+.breadcrumbSeparator {
+  color: var(--text-muted);
+}
+
+.currentPage {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* Not Found State */
+.notFound {
+  text-align: center;
+  padding: var(--spacing-xl) 0;
+}
+
+.notFound h2 {
+  color: var(--primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.notFound p {
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Hero Section */
+.heroSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background-color: var(--background-lighter);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+}
+
+.salonImageContainer {
+  position: relative;
+}
+
+.salonImagePlaceholder {
+  width: 100%;
+  height: 400px;
+  background-color: var(--background-darker);
+  border-radius: var(--border-radius-md);
+  position: relative;
+}
+
+.ratingBadge {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  background-color: var(--primary);
+  color: var(--background-darker);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.rating {
+  font-size: 1.1rem;
+}
+
+.reviewCount {
+  margin-left: var(--spacing-xs);
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.salonHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.salonName {
+  color: var(--primary);
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+  line-height: 1.2;
+}
+
+.salonDescription {
+  color: var(--text);
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: var(--spacing-lg);
+}
+
+.quickActions {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.quickActions a {
+  flex: 1;
+}
+
+.quickActions button {
+  width: 100%;
+}
+
+/* Main Content */
+.mainContent {
+  display: grid;
+  gap: var(--spacing-xl);
+}
+
+/* Section Titles */
+.sectionTitle {
+  color: var(--primary);
+  font-size: 2rem;
+  margin-bottom: var(--spacing-lg);
+  border-bottom: 2px solid rgba(191, 168, 101, 0.3);
+  padding-bottom: var(--spacing-sm);
+}
+
+/* Services Section */
+.servicesSection {
+  background-color: var(--background-lighter);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+}
+
+.serviceFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.filterButton {
+  background-color: var(--background-darker);
+  color: var(--text-muted);
+  border: 1px solid rgba(191, 168, 101, 0.3);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filterButton:hover {
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.filterButton.active {
+  background-color: var(--primary);
+  color: var(--background-darker);
+  border-color: var(--primary);
+  font-weight: 600;
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.serviceCard {
+  background-color: var(--background-darker);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+  transition: all var(--transition-medium);
+}
+
+.serviceCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+}
+
+.serviceName {
+  color: var(--primary);
+  font-size: 1.3rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.serviceDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.servicePrice {
+  color: var(--primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.serviceDuration {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Stylists Section */
+.stylistsSection {
+  background-color: var(--background-lighter);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+}
+
+.stylistsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.stylistCard {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  background-color: var(--background-darker);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+  transition: all var(--transition-medium);
+}
+
+.stylistCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.stylistImagePlaceholder {
+  width: 80px;
+  height: 80px;
+  background-color: var(--background);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.stylistInfo {
+  flex: 1;
+}
+
+.stylistName {
+  color: var(--primary);
+  font-size: 1.2rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.stylistSpecialty {
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+}
+
+.stylistExperience {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Info Section */
+.infoSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.infoCard {
+  background-color: var(--background-lighter);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+}
+
+.infoTitle {
+  color: var(--primary);
+  font-size: 1.3rem;
+  margin-bottom: var(--spacing-md);
+  border-bottom: 1px solid rgba(191, 168, 101, 0.2);
+  padding-bottom: var(--spacing-sm);
+}
+
+.infoItem {
+  display: flex;
+  margin-bottom: var(--spacing-sm);
+  gap: var(--spacing-sm);
+}
+
+.infoLabel {
+  color: var(--text-muted);
+  font-weight: 500;
+  min-width: 100px;
+}
+
+.infoValue {
+  color: var(--text);
+  flex: 1;
+}
+
+.phoneLink,
+.emailLink {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.phoneLink:hover,
+.emailLink:hover {
+  color: var(--text);
+}
+
+.scheduleItem {
+  color: var(--text);
+  padding: var(--spacing-xs) 0;
+  border-bottom: 1px solid rgba(191, 168, 101, 0.1);
+}
+
+.scheduleItem:last-child {
+  border-bottom: none;
+}
+
+.locationItem {
+  margin-bottom: var(--spacing-md);
+}
+
+.locationItem:last-child {
+  margin-bottom: 0;
+}
+
+.mapLink {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.mapLink:hover {
+  color: var(--text);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .salonDetailContainer {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+
+  .heroSection {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md);
+  }
+
+  .salonImagePlaceholder {
+    height: 250px;
+  }
+
+  .salonName {
+    font-size: 2.5rem;
+  }
+
+  .quickActions {
+    flex-direction: column;
+  }
+
+  .serviceFilters {
+    justify-content: center;
+  }
+
+  .servicesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .stylistsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .stylistCard {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .infoSection {
+    grid-template-columns: 1fr;
+  }
+
+  .infoItem {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .infoLabel {
+    min-width: auto;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 480px) {
+  .backNavigation {
+    flex-wrap: wrap;
+  }
+
+  .salonName {
+    font-size: 2rem;
+  }
+
+  .salonDescription {
+    font-size: 1.1rem;
+  }
+
+  .servicesSection,
+  .stylistsSection,
+  .infoCard {
+    padding: var(--spacing-md);
+  }
+}
