@@ -10,6 +10,8 @@ import Pricing from "./pages/Pricing";
 import Booking from "./pages/Booking";
 import SalonListing from "./pages/SalonListing";
 import SalonDetail from "./pages/SalonDetail";
+import BusinessLogin from "./pages/BusinessLogin";
+import BusinessRegister from "./pages/BusinessRegister";
 import "./styles/globals.css";
 import "./styles/pages/Booking.css";
 import "./styles/pages/Pricing.module.css";
@@ -33,6 +35,8 @@ function App() {
             <Route path="/salon/:salonId" element={<SalonDetail />} />
             <Route path="/booking" element={<Booking />} />
             <Route path="/booking/:salonId" element={<Booking />} />
+            <Route path="/business/login" element={<BusinessLogin />} />
+            <Route path="/business/register" element={<BusinessRegister />} />
           </Routes>
         </main>
         <Footer />

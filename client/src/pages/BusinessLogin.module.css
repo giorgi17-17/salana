@@ -1,0 +1,218 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    var(--background) 0%,
+    var(--background-darker) 100%
+  );
+  padding: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.formCard {
+  background: rgba(27, 59, 47, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(191, 168, 101, 0.1);
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.title {
+  color: var(--primary);
+  font-size: 1.875rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.inputGroup {
+  margin-bottom: var(--spacing-md);
+}
+
+.label {
+  display: block;
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+}
+
+.input {
+  width: 100%;
+  padding: 0.875rem;
+  background-color: rgba(27, 59, 47, 0.8);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+  border-radius: var(--border-radius-md);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all var(--transition-medium);
+  outline: none;
+}
+
+.input::placeholder {
+  color: rgba(191, 168, 101, 0.5);
+}
+
+.input:focus {
+  border-color: rgba(191, 168, 101, 0.4) !important;
+}
+
+.input:hover {
+  border-color: rgba(191, 168, 101, 0.3);
+}
+
+.passwordContainer {
+  position: relative;
+}
+
+.passwordInput {
+  width: 100%;
+  padding: 0.875rem;
+  padding-right: 3rem;
+  background-color: rgba(27, 59, 47, 0.8);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+  border-radius: var(--border-radius-md);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all var(--transition-medium);
+  outline: none;
+}
+
+.passwordInput::placeholder {
+  color: rgba(191, 168, 101, 0.5);
+}
+
+.passwordInput:focus {
+  border-color: rgba(191, 168, 101, 0.4) !important;
+}
+
+.passwordInput:hover {
+  border-color: rgba(191, 168, 101, 0.3);
+}
+
+.toggleButton {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-medium);
+}
+
+.toggleButton:hover {
+  color: var(--primary-light);
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-lg);
+  font-size: 0.875rem;
+}
+
+.checkboxGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.checkbox {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--primary);
+}
+
+.checkboxLabel {
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.forgotLink {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color var(--transition-medium);
+}
+
+.forgotLink:hover {
+  color: var(--primary-light);
+  text-decoration: underline;
+}
+
+.submitButton {
+  background-color: var(--primary);
+  color: var(--background-darker);
+  padding: 0.875rem 2rem;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-medium);
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+}
+
+.submitButton:hover {
+  background-color: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+}
+
+.registerSection {
+  text-align: center;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid rgba(191, 168, 101, 0.1);
+}
+
+.registerText {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.registerLink {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-medium);
+}
+
+.registerLink:hover {
+  background-color: rgba(191, 168, 101, 0.1);
+  color: var(--primary-light);
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+
+  .formCard {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+}

@@ -109,6 +109,19 @@ function Header() {
 
           {/* Action Buttons */}
           <div className={styles.actionButtons}>
+            <Link to="/business/login">
+              <button
+                className={`${buttonStyles.button} ${buttonStyles.secondary}`}
+                style={{
+                  marginRight: "var(--spacing-sm)",
+                  backgroundColor: "transparent",
+                  border: "1px solid var(--primary)",
+                  color: "var(--primary)",
+                }}
+              >
+                ბიზნეს შესვლა
+              </button>
+            </Link>
             <Link to="/booking">
               <button
                 className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.glow}`}
@@ -244,6 +257,22 @@ function Header() {
         </nav>
 
         <div className={styles.mobileActionButtons}>
+          <Link
+            to="/business/login"
+            onClick={closeMobileMenu}
+            style={{ width: "100%", marginBottom: "var(--spacing-sm)" }}
+          >
+            <button
+              className={`${buttonStyles.button} ${buttonStyles.secondary} ${buttonStyles.fullWidth}`}
+              style={{
+                backgroundColor: "transparent",
+                border: "1px solid var(--primary)",
+                color: "var(--primary)",
+              }}
+            >
+              ბიზნეს შესვლა
+            </button>
+          </Link>
           <Link
             to="/booking"
             onClick={closeMobileMenu}
