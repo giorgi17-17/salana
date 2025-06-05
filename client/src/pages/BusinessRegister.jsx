@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { supabase } from "../lib/supabaseClient";
 import styles from "./BusinessRegister.module.css";
 
 function BusinessRegister() {
@@ -14,27 +16,74 @@ function BusinessRegister() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setError(""); // Clear error when user types
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
 
     if (formData.password !== formData.confirmPassword) {
-      alert("პაროლები არ ემთხვევა!");
+      setError("პაროლები არ ემთხვევა!");
+      setLoading(false);
       return;
     }
 
     if (!acceptTerms) {
-      alert("გთხოვთ დაეთანხმოთ მომსახურების პირობებს!");
+      setError("გთხოვთ დაეთანხმოთ მომსახურების პირობებს!");
+      setLoading(false);
       return;
     }
 
-    console.log("Registration submitted:", formData);
-    // Handle registration logic here
+    const { data: authData, error: authError } = await signUp(
+      formData.email,
+      formData.password,
+      {
+        businessName: formData.businessName,
+        phone: formData.phone,
+      }
+    );
+
+    if (authError) {
+      setError(
+        authError.message === "User already registered"
+          ? "ეს ელ-ფოსტა უკვე გამოყენებულია"
+          : "რეგისტრაციის შეცდომა"
+      );
+    } else if (authData?.user) {
+      // Create business record in the database
+      const { error: businessError } = await supabase
+        .from("businesses")
+        .insert({
+          user_id: authData.user.id,
+          name: formData.businessName,
+          phone: formData.phone,
+          email: formData.email,
+          status: "pending",
+        });
+
+      if (businessError) {
+        console.error("Error creating business:", businessError);
+        setError("ბიზნესის შექმნაში შეცდომა");
+      } else {
+        setSuccess("რეგისტრაცია წარმატებული! გადამისამართება დაშბორდზე...");
+        setTimeout(() => navigate("/dashboard"), 2000);
+      }
+    }
+
+    setLoading(false);
   };
 
   const isPasswordValid = formData.password.length >= 8;
@@ -47,6 +96,30 @@ function BusinessRegister() {
       <div className={styles.formCard}>
         <form onSubmit={handleSubmit}>
           <h2 className={styles.title}>შექმენით თქვენი ბიზნეს ანგარიში</h2>
+
+          {error && (
+            <div
+              style={{
+                color: "#ef4444",
+                marginBottom: "1rem",
+                fontSize: "0.875rem",
+              }}
+            >
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div
+              style={{
+                color: "#22c55e",
+                marginBottom: "1rem",
+                fontSize: "0.875rem",
+              }}
+            >
+              {success}
+            </div>
+          )}
 
           {/* Business Name */}
           <div className={styles.inputGroup}>
@@ -251,14 +324,16 @@ function BusinessRegister() {
 
           <button
             type="submit"
-            disabled={!acceptTerms || !isPasswordValid || !passwordsMatch}
+            disabled={
+              !acceptTerms || !isPasswordValid || !passwordsMatch || loading
+            }
             className={`${styles.submitButton} ${
-              !acceptTerms || !isPasswordValid || !passwordsMatch
+              !acceptTerms || !isPasswordValid || !passwordsMatch || loading
                 ? styles.submitButtonDisabled
                 : styles.submitButtonEnabled
             }`}
           >
-            შექმენით ბიზნეს ანგარიში
+            {loading ? "რეგისტრაცია..." : "შექმენით ბიზნეს ანგარიში"}
           </button>
 
           <div className={styles.loginSection}>

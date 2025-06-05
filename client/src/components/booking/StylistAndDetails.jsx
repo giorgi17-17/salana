@@ -2,34 +2,6 @@ import { useState } from "react";
 import styles from "../../styles/components/booking/StepComponents.module.css";
 import buttonStyles from "../../styles/components/Button.module.css";
 
-// Sample stylists data
-const stylists = [
-  {
-    id: "stylist1",
-    name: "ნინო მიქელაძე",
-    specialty: "თმის სტილისტი",
-    experience: "7 წელი",
-    bio: "ნინო სპეციალიზირებულია თმის შეჭრასა და სტაილინგში",
-    image: "stylist1.jpg",
-  },
-  {
-    id: "stylist2",
-    name: "გიორგი კაპანაძე",
-    specialty: "კოლორისტი",
-    experience: "5 წელი",
-    bio: "გიორგი ცნობილია თავისი კრეატიული მიდგომით თმის შეღებვასთან",
-    image: "stylist2.jpg",
-  },
-  {
-    id: "stylist3",
-    name: "თამარ გიორგაძე",
-    specialty: "თერაპისტი",
-    experience: "8 წელი",
-    bio: "თამარი არის თმის მკურნალობისა და აღდგენის ექსპერტი",
-    image: "stylist3.jpg",
-  },
-];
-
 function StylistAndDetails({
   selectedStylist,
   setSelectedStylist,
@@ -38,6 +10,7 @@ function StylistAndDetails({
   nextStep,
   prevStep,
   selectedService,
+  stylists = [],
 }) {
   const [error, setError] = useState("");
 
@@ -55,12 +28,7 @@ function StylistAndDetails({
   };
 
   const handleContinue = () => {
-    // Validate fields
-    if (!selectedStylist) {
-      setError("გთხოვთ აირჩიოთ სტილისტი");
-      return;
-    }
-
+    // Validate fields (stylist is optional)
     if (!userDetails.name || !userDetails.email || !userDetails.phone) {
       setError("გთხოვთ შეავსოთ ყველა სავალდებულო ველი");
       return;
@@ -87,8 +55,8 @@ function StylistAndDetails({
     return /^\d{9}$/.test(phone.replace(/\s+/g, ""));
   };
 
-  // Filter stylists based on service specialty if needed
-  const filteredStylists = stylists;
+  // Use stylists from the business or show message if none available
+  const availableStylists = stylists || [];
 
   return (
     <div className={styles.stepContainer}>
@@ -102,31 +70,44 @@ function StylistAndDetails({
       {error && <div className={styles.error}>{error}</div>}
 
       <div className={styles.stylistSelection}>
-        <h3 className={styles.sectionTitle}>აირჩიეთ სტილისტი</h3>
-        <div className={styles.stylistGrid}>
-          {filteredStylists.map((stylist) => (
-            <div
-              key={stylist.id}
-              className={`${styles.stylistCard} ${
-                selectedStylist?.id === stylist.id ? styles.selected : ""
-              }`}
-              onClick={() => handleStylistSelect(stylist)}
-            >
-              <div className={styles.stylistImage}>
-                {/* Replace with actual image later */}
-                <div className={styles.stylistImagePlaceholder}></div>
+        <h3 className={styles.sectionTitle}>
+          აირჩიეთ სტილისტი (არასავალდებულო)
+        </h3>
+        {availableStylists.length > 0 ? (
+          <div className={styles.stylistGrid}>
+            {availableStylists.map((stylist) => (
+              <div
+                key={stylist.id}
+                className={`${styles.stylistCard} ${
+                  selectedStylist?.id === stylist.id ? styles.selected : ""
+                }`}
+                onClick={() => handleStylistSelect(stylist)}
+              >
+                <div className={styles.stylistImage}>
+                  {/* Replace with actual image later */}
+                  <div className={styles.stylistImagePlaceholder}></div>
+                </div>
+                <div className={styles.stylistInfo}>
+                  <h4 className={styles.stylistName}>{stylist.name}</h4>
+                  <p className={styles.stylistSpecialty}>{stylist.specialty}</p>
+                  <p className={styles.stylistExperience}>
+                    გამოცდილება: {stylist.experience}
+                  </p>
+                  {stylist.bio && (
+                    <p className={styles.stylistBio}>{stylist.bio}</p>
+                  )}
+                </div>
               </div>
-              <div className={styles.stylistInfo}>
-                <h4 className={styles.stylistName}>{stylist.name}</h4>
-                <p className={styles.stylistSpecialty}>{stylist.specialty}</p>
-                <p className={styles.stylistExperience}>
-                  გამოცდილება: {stylist.experience}
-                </p>
-                <p className={styles.stylistBio}>{stylist.bio}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.noStylists}>
+            <p>
+              ამ სალონში სტილისტები ჯერ არ არის დამატებული. შეგიძლიათ დაჯავშნოთ
+              ყოველგვარი სტილისტის მითითების გარეშე.
+            </p>
+          </div>
+        )}
       </div>
 
       <div className={styles.userDetails}>

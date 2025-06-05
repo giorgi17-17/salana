@@ -1,12 +1,82 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import salons from "../data/salons";
+import { supabase } from "../lib/supabaseClient";
 import styles from "../styles/pages/SalonListing.module.css";
 import buttonStyles from "../styles/components/Button.module.css";
 
 function SalonListing() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [salons, setSalons] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch businesses from Supabase
+  useEffect(() => {
+    fetchBusinesses();
+  }, []);
+
+  const fetchBusinesses = async () => {
+    try {
+      setLoading(true);
+      const { data: businesses, error } = await supabase
+        .from("businesses")
+        .select(
+          `
+          *,
+          business_locations(*),
+          business_services(*),
+          business_stylists(*)
+        `
+        )
+        .eq("status", "approved")
+        .order("featured", { ascending: false });
+
+      if (error) {
+        setError("სალონების ჩატვირთვისას მოხდა შეცდომა");
+        console.error("Error fetching businesses:", error);
+        return;
+      }
+
+      // Transform database data to match expected format
+      const transformedSalons = businesses.map((business) => ({
+        id: business.id,
+        name: business.name,
+        description: business.description || "",
+        address:
+          business.business_locations?.[0]?.address ||
+          "მისამართი მითითებული არ არის",
+        phone: business.phone || "",
+        email: business.email || "",
+        rating: business.rating || 0,
+        reviewCount: business.review_count || 0,
+        featured: business.featured || false,
+        image: business.image || "",
+        services:
+          business.business_services?.map((service) => ({
+            id: service.id,
+            name: service.name,
+            price: service.price,
+            duration: service.duration,
+            description: service.description,
+          })) || [],
+        stylists:
+          business.business_stylists?.map((stylist) => ({
+            id: stylist.id,
+            name: stylist.name,
+            specialty: stylist.specialty,
+            experience: stylist.experience,
+          })) || [],
+      }));
+
+      setSalons(transformedSalons);
+    } catch (error) {
+      setError("სალონების ჩატვირთვისას მოხდა შეცდომა");
+      console.error("Error fetching businesses:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Filter by search term and category
   const filteredSalons = salons.filter((salon) => {
@@ -21,14 +91,16 @@ function SalonListing() {
     // Check if salon has the selected service category
     return (
       matchesSearch &&
-      salon.services.some((service) => service.id === selectedCategory)
+      salon.services.some((service) =>
+        service.name.toLowerCase().includes(selectedCategory.toLowerCase())
+      )
     );
   });
 
   // Get unique service categories
   const serviceCategories = [
     ...new Set(
-      salons.flatMap((salon) => salon.services.map((service) => service.id))
+      salons.flatMap((salon) => salon.services.map((service) => service.name))
     ),
   ];
 
@@ -69,50 +141,72 @@ function SalonListing() {
                 }`}
                 onClick={() => setSelectedCategory(category)}
               >
-                {category === "haircut" && "თმის შეჭრა"}
-                {category === "color" && "შეღებვა"}
-                {category === "styling" && "სტაილინგი"}
-                {category === "treatment" && "მკურნალობა"}
-                {category === "manicure" && "მანიკური"}
-                {category === "pedicure" && "პედიკური"}
-                {category === "facial" && "სახის მოვლა"}
-                {category === "massage" && "მასაჟი"}
-                {category === "shave" && "საპარსი"}
-                {category === "gel" && "გელ-ლაკი"}
-                {category === "nail_art" && "ნეილ არტი"}
-                {category === "body_wrap" && "სხეულის შეფუთვა"}
-                {category === "package" && "პაკეტები"}
+                {category}
               </button>
             ))}
           </div>
         </div>
 
-        <div className={styles.featuredSection}>
-          <h2 className={styles.sectionTitle}>რჩეული სალონები</h2>
-          <div className={styles.salonGrid}>
-            {filteredSalons
-              .filter((salon) => salon.featured)
-              .map((salon) => (
-                <SalonCard key={salon.id} salon={salon} />
-              ))}
+        {loading && (
+          <div className={styles.loading}>
+            <p>სალონები იტვირთება...</p>
           </div>
-        </div>
+        )}
 
-        <div className={styles.allSalonsSection}>
-          <h2 className={styles.sectionTitle}>ყველა სალონი</h2>
-          <div className={styles.salonGrid}>
-            {filteredSalons
-              .filter((salon) => !salon.featured)
-              .map((salon) => (
-                <SalonCard key={salon.id} salon={salon} />
-              ))}
+        {error && (
+          <div className={styles.error}>
+            <p>{error}</p>
+            <button
+              onClick={fetchBusinesses}
+              className={`${buttonStyles.button} ${buttonStyles.secondary}`}
+            >
+              ხელახლა სცადე
+            </button>
           </div>
-        </div>
+        )}
 
-        {filteredSalons.length === 0 && (
-          <div className={styles.noResults}>
-            <p>სამწუხაროდ, თქვენი ძიების შედეგად სალონები ვერ მოიძებნა.</p>
-          </div>
+        {!loading && !error && (
+          <>
+            {filteredSalons.filter((salon) => salon.featured).length > 0 && (
+              <div className={styles.featuredSection}>
+                <h2 className={styles.sectionTitle}>რჩეული სალონები</h2>
+                <div className={styles.salonGrid}>
+                  {filteredSalons
+                    .filter((salon) => salon.featured)
+                    .map((salon) => (
+                      <SalonCard key={salon.id} salon={salon} />
+                    ))}
+                </div>
+              </div>
+            )}
+
+            <div className={styles.allSalonsSection}>
+              <h2 className={styles.sectionTitle}>
+                {filteredSalons.filter((salon) => salon.featured).length > 0
+                  ? "ყველა სალონი"
+                  : "სალონები"}
+              </h2>
+              <div className={styles.salonGrid}>
+                {filteredSalons
+                  .filter((salon) => !salon.featured)
+                  .map((salon) => (
+                    <SalonCard key={salon.id} salon={salon} />
+                  ))}
+              </div>
+            </div>
+
+            {filteredSalons.length === 0 && salons.length > 0 && (
+              <div className={styles.noResults}>
+                <p>სამწუხაროდ, თქვენი ძიების შედეგად სალონები ვერ მოიძებნა.</p>
+              </div>
+            )}
+
+            {salons.length === 0 && !loading && (
+              <div className={styles.noResults}>
+                <p>ჯერ არ არის დარეგისტრირებული სალონები.</p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>

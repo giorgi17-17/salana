@@ -10,6 +10,7 @@ function BookingSummary({
   handleSubmit,
   prevStep,
   isSubmitting,
+  submitError,
 }) {
   // Function to format date into a more readable format
   const formatDate = (dateString) => {
@@ -29,6 +30,8 @@ function BookingSummary({
       <p className={styles.stepDescription}>
         გთხოვთ, გადაამოწმოთ თქვენი ჯავშნის დეტალები
       </p>
+
+      {submitError && <div className={styles.error}>{submitError}</div>}
 
       <div className={styles.summaryContainer}>
         <div className={styles.summarySection}>

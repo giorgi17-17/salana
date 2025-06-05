@@ -51,6 +51,23 @@ function BookingConfirmation({ bookingData }) {
             <span className={styles.label}>დრო:</span>
             <span className={styles.value}>{bookingData.time}</span>
           </div>
+
+          {bookingData.stylist && (
+            <div className={styles.detailItem}>
+              <span className={styles.label}>სტილისტი:</span>
+              <span className={styles.value}>{bookingData.stylist}</span>
+            </div>
+          )}
+
+          <div className={styles.detailItem}>
+            <span className={styles.label}>ფასი:</span>
+            <span className={styles.value}>{bookingData.price} ₾</span>
+          </div>
+
+          <div className={styles.detailItem}>
+            <span className={styles.label}>ჯავშნის ID:</span>
+            <span className={styles.value}>{bookingData.bookingId}</span>
+          </div>
         </div>
       )}
 

@@ -1,0 +1,316 @@
+.container {
+  padding: var(--spacing-lg);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.header h2 {
+  color: var(--primary);
+  margin: 0;
+}
+
+.refreshButton {
+  background-color: var(--primary);
+  color: var(--background-darker);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.refreshButton:hover {
+  background-color: var(--primary-dark);
+}
+
+.loading {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-muted);
+}
+
+.error {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.statCard {
+  background-color: var(--background-lighter);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+}
+
+.statCard h3 {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.statValue {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Filter Tabs */
+.filterTabs {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-lg);
+  overflow-x: auto;
+  padding-bottom: var(--spacing-xs);
+}
+
+.filterTab {
+  background-color: var(--background-lighter);
+  border: 1px solid rgba(191, 168, 101, 0.3);
+  color: var(--text);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.filterTab:hover {
+  border-color: var(--primary);
+}
+
+.filterTabActive {
+  background-color: var(--primary);
+  color: var(--background-darker);
+  border-color: var(--primary);
+}
+
+/* Bookings List */
+.bookingsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.bookingCard {
+  background-color: var(--background-lighter);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  transition: all var(--transition-fast);
+}
+
+.bookingCard:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.bookingHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+}
+
+.bookingInfo h3 {
+  margin: 0 0 var(--spacing-xs) 0;
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+.bookingInfo p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Status Badges */
+.statusBadge {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.statusPending {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #856404;
+}
+
+.statusConfirmed {
+  background-color: rgba(25, 135, 84, 0.2);
+  color: #0f5132;
+}
+
+.statusInProgress {
+  background-color: rgba(13, 110, 253, 0.2);
+  color: #052c65;
+}
+
+.statusCompleted {
+  background-color: rgba(25, 135, 84, 0.2);
+  color: #0f5132;
+}
+
+.statusCancelled {
+  background-color: rgba(220, 53, 69, 0.2);
+  color: #842029;
+}
+
+.statusNoShow {
+  background-color: rgba(108, 117, 125, 0.2);
+  color: #495057;
+}
+
+/* Booking Details */
+.bookingDetails {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xs) 0;
+}
+
+.label {
+  font-weight: 500;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.price {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+/* Action Buttons */
+.bookingActions {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.actionButton {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.confirmButton {
+  background-color: #198754;
+  color: white;
+}
+
+.confirmButton:hover {
+  background-color: #157347;
+}
+
+.cancelButton {
+  background-color: #dc3545;
+  color: white;
+}
+
+.cancelButton:hover {
+  background-color: #bb2d3b;
+}
+
+.progressButton {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.progressButton:hover {
+  background-color: #0b5ed7;
+}
+
+.completeButton {
+  background-color: #198754;
+  color: white;
+}
+
+.completeButton:hover {
+  background-color: #157347;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-muted);
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .bookingHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .bookingDetails {
+    grid-template-columns: 1fr;
+  }
+
+  .detailRow {
+    border-bottom: 1px solid rgba(191, 168, 101, 0.1);
+    padding: var(--spacing-sm) 0;
+  }
+
+  .detailRow:last-child {
+    border-bottom: none;
+  }
+
+  .bookingActions {
+    justify-content: stretch;
+  }
+
+  .actionButton {
+    flex: 1;
+    text-align: center;
+  }
+}

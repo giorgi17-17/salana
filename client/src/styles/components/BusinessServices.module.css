@@ -1,0 +1,571 @@
+/* Business Services Management Styles - Modern Design */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+  background: transparent;
+  min-height: auto;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(34, 80, 58, 0.12);
+  gap: 2rem;
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: stretch;
+    text-align: center;
+  }
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #22503a, #2d7a4e);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Buttons */
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #22503a, #2d7a4e);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(34, 80, 58, 0.25);
+}
+
+.addButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1f4a34, #2a6e47);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(34, 80, 58, 0.35);
+}
+
+.addButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 4px 15px rgba(34, 80, 58, 0.15);
+}
+
+@media (max-width: 640px) {
+  .addButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: rgba(248, 250, 252, 0.3);
+  border-radius: 20px;
+  border: 2px dashed rgba(34, 80, 58, 0.2);
+  margin: 2rem 0;
+}
+
+.emptyIcon {
+  color: rgba(34, 80, 58, 0.4);
+  margin-bottom: 1.5rem;
+  opacity: 0.7;
+}
+
+.emptyState h3 {
+  font-size: 1.25rem;
+  color: #111827;
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+.emptyState p {
+  color: #6b7280;
+  margin-bottom: 2rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #22503a, #2d7a4e);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(34, 80, 58, 0.25);
+}
+
+.primaryButton:hover {
+  background: linear-gradient(135deg, #1f4a34, #2a6e47);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(34, 80, 58, 0.35);
+}
+
+/* Services Grid */
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 640px) {
+  .servicesGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Service Card */
+.serviceCard {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(34, 80, 58, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.serviceCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #22503a, #2d7a4e, #059669);
+}
+
+.serviceCard:hover {
+  border-color: rgba(34, 80, 58, 0.2);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+}
+
+.serviceHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.serviceName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  flex: 1;
+  line-height: 1.4;
+}
+
+.serviceActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.editButton,
+.deleteButton {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.editButton {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.editButton:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.2);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.deleteButton {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.deleteButton:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.editButton:disabled,
+.deleteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.serviceDescription {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.serviceDetails {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+@media (max-width: 480px) {
+  .serviceDetails {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.detailItem svg {
+  color: #22503a;
+  flex-shrink: 0;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.modal {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(34, 80, 58, 0.1);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  max-height: min(90vh, 800px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 1002;
+  margin: auto;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 2rem 1rem;
+  border-bottom: 1px solid rgba(34, 80, 58, 0.1);
+}
+
+.modalHeader h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.closeButton {
+  background: rgba(107, 114, 128, 0.1);
+  border: 1px solid rgba(107, 114, 128, 0.2);
+  color: #6b7280;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.closeButton:hover:not(:disabled) {
+  background: rgba(107, 114, 128, 0.2);
+  transform: scale(1.05);
+  color: #4b5563;
+}
+
+.modalBody {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modalFooter {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 2rem 2rem;
+  justify-content: flex-end;
+  border-top: 1px solid rgba(34, 80, 58, 0.1);
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .modalFooter {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 480px) {
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.label svg {
+  color: #22503a;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1px solid rgba(34, 80, 58, 0.2);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #111827;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #22503a;
+  box-shadow: 0 0 0 3px rgba(34, 80, 58, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.input:disabled,
+.textarea:disabled {
+  background: rgba(243, 244, 246, 0.5);
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.inputError {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.inputError:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.errorMessage {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.submitError {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #dc2626;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.cancelButton {
+  background: rgba(107, 114, 128, 0.1);
+  border: 1px solid rgba(107, 114, 128, 0.2);
+  color: #6b7280;
+  padding: 0.875rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cancelButton:hover:not(:disabled) {
+  background: rgba(107, 114, 128, 0.2);
+  transform: translateY(-1px);
+  color: #4b5563;
+}
+
+.submitButton {
+  background: linear-gradient(135deg, #22503a, #2d7a4e);
+  color: white;
+  border: none;
+  padding: 0.875rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(34, 80, 58, 0.25);
+  min-width: 120px;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1f4a34, #2a6e47);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(34, 80, 58, 0.35);
+}
+
+.submitButton:disabled,
+.cancelButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 480px) {
+  .cancelButton,
+  .submitButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    margin: 0.5rem;
+    max-width: calc(100vw - 1rem);
+    max-height: calc(100vh - 1rem);
+    border-radius: 16px;
+  }
+
+  .modalHeader,
+  .modalBody {
+    padding: 1.5rem;
+  }
+
+  .modalHeader {
+    padding-bottom: 0.75rem;
+  }
+
+  .serviceCard {
+    padding: 1.5rem;
+  }
+
+  .serviceHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .serviceActions {
+    align-self: flex-end;
+  }
+}

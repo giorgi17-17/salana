@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import styles from "./BusinessLogin.module.css";
 
 function BusinessLogin() {
@@ -7,27 +8,52 @@ function BusinessLogin() {
     email: "",
     password: "",
   });
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setError(""); // Clear error when user types
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login submitted:", formData);
-    // Handle login logic here
+    setLoading(true);
+    setError("");
+
+    const { error } = await signIn(formData.email, formData.password);
+
+    if (error) {
+      setError("არასწორი ელ-ფოსტა ან პაროლი");
+    } else {
+      navigate("/dashboard"); // Redirect to dashboard
+    }
+
+    setLoading(false);
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.formCard}>
         <form onSubmit={handleSubmit}>
-          <h2 className={styles.title}>
-            შედით თქვენს ანგარიშში
-          </h2>
+          <h2 className={styles.title}>შედით თქვენს ანგარიშში</h2>
+
+          {error && (
+            <div
+              style={{
+                color: "#ef4444",
+                marginBottom: "1rem",
+                fontSize: "0.875rem",
+              }}
+            >
+              {error}
+            </div>
+          )}
 
           <div className={styles.inputGroup}>
             <label htmlFor="email" className={styles.label}>
@@ -105,14 +131,16 @@ function BusinessLogin() {
             </Link>
           </div>
 
-          <button type="submit" className={styles.submitButton}>
-            შესვლა
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={loading}
+          >
+            {loading ? "შემოწმება..." : "შესვლა"}
           </button>
 
           <div className={styles.registerSection}>
-            <p className={styles.registerText}>
-              არ გაქვთ ბიზნეს ანგარიში?
-            </p>
+            <p className={styles.registerText}>არ გაქვთ ბიზნეს ანგარიში?</p>
             <Link to="/business/register" className={styles.registerLink}>
               შექმენით ანგარიში
             </Link>

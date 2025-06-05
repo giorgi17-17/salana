@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Navigate } from "react-router-dom";
+import { supabase } from "../lib/supabaseClient";
+import { useAuth } from "../context/AuthContext";
 import BookingConfirmation from "../components/booking/BookingConfirmation";
 import BookingProgress from "../components/booking/BookingProgress";
 import ServiceSelection from "../components/booking/ServiceSelection";
@@ -10,7 +12,9 @@ import salons from "../data/salons";
 
 function Booking() {
   const { salonId } = useParams();
+  const { user } = useAuth();
   const [selectedSalon, setSelectedSalon] = useState(null);
+  const [submitError, setSubmitError] = useState("");
 
   // If no salon ID is provided, redirect to salons page
   if (!salonId && window.location.pathname === "/booking") {
@@ -20,10 +24,66 @@ function Booking() {
   // Find the selected salon based on the ID
   useEffect(() => {
     if (salonId) {
-      const salon = salons.find((s) => s.id === salonId);
-      setSelectedSalon(salon);
+      fetchSalonData(salonId);
     }
   }, [salonId]);
+
+  const fetchSalonData = async (id) => {
+    try {
+      // First try to find in database
+      const { data: businessData, error } = await supabase
+        .from("businesses")
+        .select(
+          `
+          *,
+          business_services(*),
+          business_stylists(*)
+        `
+        )
+        .eq("id", id)
+        .eq("status", "approved")
+        .single();
+
+      if (businessData && !error) {
+        // Use real business data from database
+        setSelectedSalon({
+          id: businessData.id,
+          name: businessData.name,
+          description: businessData.description,
+          address:
+            businessData.business_locations?.[0]?.address ||
+            "მისამართი მითითებული არ არის",
+          phone: businessData.phone,
+          email: businessData.email,
+          rating: businessData.rating,
+          services:
+            businessData.business_services?.map((service) => ({
+              id: service.id,
+              name: service.name,
+              price: service.price,
+              duration: service.duration,
+              description: service.description,
+            })) || [],
+          stylists:
+            businessData.business_stylists?.map((stylist) => ({
+              id: stylist.id,
+              name: stylist.name,
+              specialty: stylist.specialty,
+              experience: stylist.experience,
+            })) || [],
+        });
+      } else {
+        // Fallback to mock data if not found in database
+        const salon = salons.find((s) => s.id === id);
+        setSelectedSalon(salon);
+      }
+    } catch (error) {
+      console.error("Error fetching salon data:", error);
+      // Fallback to mock data
+      const salon = salons.find((s) => s.id === id);
+      setSelectedSalon(salon);
+    }
+  };
 
   // Step state
   const [currentStep, setCurrentStep] = useState(1);
@@ -58,42 +118,72 @@ function Booking() {
   // Handle final form submission
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setSubmitError("");
 
     try {
-      // Prepare the full booking data
+      // Check if this is mock data or real business data
+      const isUUID =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+          selectedSalon.id
+        );
+
+      if (!isUUID) {
+        // This is mock data - show error message
+        setSubmitError(
+          "ჯავშნა შესაძლებელია მხოლოდ ნამდვილ სალონებზე. გთხოვთ დარეგისტრირდეთ როგორც ბიზნესი ან აირჩიოთ რეგისტრირებული სალონი."
+        );
+        return;
+      }
+
+      // Prepare booking data for database
       const bookingData = {
-        salon: selectedSalon
-          ? {
-              id: selectedSalon.id,
-              name: selectedSalon.name,
-            }
-          : null,
-        service: selectedService,
-        date: selectedDate,
-        time: selectedTime,
-        stylist: selectedStylist,
-        client: userDetails,
+        business_id: selectedSalon.id,
+        service_id: selectedService.id,
+        stylist_id: selectedStylist?.id,
+        customer_user_id: user?.id || null,
+        customer_name: userDetails.name,
+        customer_email: userDetails.email,
+        customer_phone: userDetails.phone,
+        customer_notes: userDetails.notes,
+        booking_date: selectedDate,
+        booking_time: selectedTime,
+        duration: selectedService.duration,
+        total_price: selectedService.price,
+        status: "pending",
       };
 
-      // For now, we'll just log the booking data
-      console.log("Booking data:", bookingData);
+      // Insert booking into database
+      const { data, error } = await supabase
+        .from("bookings")
+        .insert([bookingData])
+        .select()
+        .single();
 
-      // In the future, you'll add database integration here
+      if (error) {
+        console.error("Database error:", error);
+        setSubmitError(
+          "ჯავშნის შექმნისას მოხდა შეცდომა. გთხოვთ სცადოთ ხელახლა."
+        );
+        return;
+      }
 
       // Set submitted data for confirmation
       setSubmittedData({
+        bookingId: data.id,
         salon: selectedSalon?.name || "",
         name: userDetails.name,
         service: selectedService.name,
         date: selectedDate,
         time: selectedTime,
-        stylist: selectedStylist.name,
+        stylist: selectedStylist?.name || "არ არის მითითებული",
+        price: selectedService.price,
       });
 
       // Move to confirmed state
       setIsSubmitted(true);
     } catch (error) {
       console.error("Error submitting booking:", error);
+      setSubmitError("ჯავშნის შექმნისას მოხდა შეცდომა. გთხოვთ სცადოთ ხელახლა.");
     } finally {
       setIsSubmitting(false);
     }
@@ -180,6 +270,7 @@ function Booking() {
             prevStep={prevStep}
             isSubmitting={isSubmitting}
             salon={selectedSalon}
+            submitError={submitError}
           />
         );
       default:
