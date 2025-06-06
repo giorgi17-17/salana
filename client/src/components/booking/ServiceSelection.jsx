@@ -49,14 +49,49 @@ function ServiceSelection({
   // Use salon-specific services if provided, otherwise use default services
   const availableServices = services || defaultServices;
 
+  // Convert single service to array for backward compatibility
+  const selectedServices = Array.isArray(selectedService)
+    ? selectedService
+    : selectedService
+    ? [selectedService]
+    : [];
+
   const handleServiceSelect = (service) => {
-    setSelectedService(service);
+    let newSelectedServices;
+
+    if (selectedServices.find((s) => s.id === service.id)) {
+      // Remove service if already selected
+      newSelectedServices = selectedServices.filter((s) => s.id !== service.id);
+    } else {
+      // Add service to selection
+      newSelectedServices = [...selectedServices, service];
+    }
+
+    setSelectedService(newSelectedServices);
     setError("");
   };
 
+  const isServiceSelected = (serviceId) => {
+    return selectedServices.some((s) => s.id === serviceId);
+  };
+
+  const getTotalPrice = () => {
+    return selectedServices.reduce(
+      (total, service) => total + service.price,
+      0
+    );
+  };
+
+  const getTotalDuration = () => {
+    return selectedServices.reduce(
+      (total, service) => total + service.duration,
+      0
+    );
+  };
+
   const handleContinue = () => {
-    if (!selectedService) {
-      setError("გთხოვთ აირჩიოთ სერვისი გასაგრძელებლად");
+    if (selectedServices.length === 0) {
+      setError("გთხოვთ აირჩიოთ მინიმუმ ერთი სერვისი გასაგრძელებლად");
       return;
     }
     nextStep();
@@ -64,25 +99,42 @@ function ServiceSelection({
 
   return (
     <div className={styles.stepContainer}>
-      <h2 className={styles.stepTitle}>აირჩიეთ სერვისი</h2>
+      <h2 className={styles.stepTitle}>აირჩიეთ სერვისები</h2>
       <p className={styles.stepDescription}>
-        გთხოვთ აირჩიოთ სასურველი სერვისი ჩვენი მენიუდან
+        აირჩიეთ სასურველი სერვისები. შეგიძლიათ აირჩიოთ ერთი ან მეტი სერვისი
       </p>
 
       {error && <div className={styles.error}>{error}</div>}
+
+      {selectedServices.length > 0 && (
+        <div className={styles.selectionSummary}>
+          <h3 className={styles.summaryTitle}>
+            არჩეული სერვისები ({selectedServices.length})
+          </h3>
+          <div className={styles.summaryDetails}>
+            <span className={styles.totalPrice}>სულ: {getTotalPrice()} ₾</span>
+            <span className={styles.totalDuration}>
+              ხანგრძლივობა: {getTotalDuration()} წუთი
+            </span>
+          </div>
+        </div>
+      )}
 
       <div className={styles.serviceGrid}>
         {availableServices.map((service) => (
           <div
             key={service.id}
             className={`${styles.serviceCard} ${
-              selectedService?.id === service.id ? styles.selected : ""
+              isServiceSelected(service.id) ? styles.selected : ""
             }`}
             onClick={() => handleServiceSelect(service)}
           >
             <div className={styles.serviceImagePlaceholder}>
               {/* Replace with actual image later */}
               <div className={styles.serviceIconPlaceholder}></div>
+              {isServiceSelected(service.id) && (
+                <div className={styles.selectedBadge}>✓</div>
+              )}
             </div>
             <div className={styles.serviceInfo}>
               <h3 className={styles.serviceName}>{service.name}</h3>
@@ -102,8 +154,9 @@ function ServiceSelection({
         <button
           className={`${buttonStyles.button} ${buttonStyles.primary}`}
           onClick={handleContinue}
+          disabled={selectedServices.length === 0}
         >
-          გაგრძელება
+          გაგრძელება ({selectedServices.length} სერვისი)
         </button>
       </div>
     </div>

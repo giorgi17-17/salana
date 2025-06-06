@@ -33,7 +33,12 @@ function StylistAndDetails({
       setLoading(true);
 
       // Fetch existing bookings for the selected date and time
-      const serviceDuration = selectedService?.duration || 60;
+      const totalDuration = Array.isArray(selectedService)
+        ? selectedService.reduce(
+            (total, service) => total + service.duration,
+            0
+          )
+        : selectedService?.duration || 60;
       const { data: bookings, error } = await supabase
         .from("bookings")
         .select("stylist_id, booking_time, duration")
@@ -49,7 +54,7 @@ function StylistAndDetails({
         availability[stylist.id] = checkStylistTimeConflict(
           stylist.id,
           selectedTime,
-          serviceDuration,
+          totalDuration,
           bookings || []
         );
       });

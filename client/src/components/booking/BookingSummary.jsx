@@ -37,24 +37,69 @@ function BookingSummary({
         <div className={styles.summarySection}>
           <h3 className={styles.summarySectionTitle}>მომსახურება</h3>
           <div className={styles.summaryCard}>
-            <div className={styles.summaryRow}>
-              <span className={styles.summaryLabel}>სერვისი:</span>
-              <span className={styles.summaryValue}>
-                {selectedService?.name}
-              </span>
-            </div>
-            <div className={styles.summaryRow}>
-              <span className={styles.summaryLabel}>ფასი:</span>
-              <span className={styles.summaryValue}>
-                {selectedService?.price} ₾
-              </span>
-            </div>
-            <div className={styles.summaryRow}>
-              <span className={styles.summaryLabel}>ხანგრძლივობა:</span>
-              <span className={styles.summaryValue}>
-                {selectedService?.duration} წუთი
-              </span>
-            </div>
+            {Array.isArray(selectedService) && selectedService.length > 0 ? (
+              <>
+                <div className={styles.summaryRow}>
+                  <span className={styles.summaryLabel}>სერვისები:</span>
+                  <div className={styles.servicesList}>
+                    {selectedService.map((service, index) => (
+                      <div key={service.id} className={styles.serviceItem}>
+                        <span className={styles.serviceName}>
+                          {service.name}
+                        </span>
+                        <span className={styles.servicePrice}>
+                          {service.price} ₾
+                        </span>
+                        <span className={styles.serviceDuration}>
+                          ({service.duration} წუთი)
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className={styles.summaryRow}>
+                  <span className={styles.summaryLabel}>სულ ფასი:</span>
+                  <span className={styles.summaryValue}>
+                    {selectedService.reduce(
+                      (total, service) => total + service.price,
+                      0
+                    )}{" "}
+                    ₾
+                  </span>
+                </div>
+                <div className={styles.summaryRow}>
+                  <span className={styles.summaryLabel}>სულ ხანგრძლივობა:</span>
+                  <span className={styles.summaryValue}>
+                    {selectedService.reduce(
+                      (total, service) => total + service.duration,
+                      0
+                    )}{" "}
+                    წუთი
+                  </span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className={styles.summaryRow}>
+                  <span className={styles.summaryLabel}>სერვისი:</span>
+                  <span className={styles.summaryValue}>
+                    {selectedService?.name}
+                  </span>
+                </div>
+                <div className={styles.summaryRow}>
+                  <span className={styles.summaryLabel}>ფასი:</span>
+                  <span className={styles.summaryValue}>
+                    {selectedService?.price} ₾
+                  </span>
+                </div>
+                <div className={styles.summaryRow}>
+                  <span className={styles.summaryLabel}>ხანგრძლივობა:</span>
+                  <span className={styles.summaryValue}>
+                    {selectedService?.duration} წუთი
+                  </span>
+                </div>
+              </>
+            )}
           </div>
         </div>
 

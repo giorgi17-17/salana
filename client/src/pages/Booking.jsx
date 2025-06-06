@@ -90,7 +90,7 @@ function Booking() {
   const totalSteps = 5; // Including confirmation screen
 
   // Form data state
-  const [selectedService, setSelectedService] = useState(null);
+  const [selectedService, setSelectedService] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedStylist, setSelectedStylist] = useState(null);
@@ -135,48 +135,65 @@ function Booking() {
         return;
       }
 
-      // Prepare booking data for database
-      const bookingData = {
-        business_id: selectedSalon.id,
-        service_id: selectedService.id,
-        stylist_id: selectedStylist?.id,
-        customer_user_id: user?.id || null,
-        customer_name: userDetails.name,
-        customer_email: userDetails.email,
-        customer_phone: userDetails.phone,
-        customer_notes: userDetails.notes,
-        booking_date: selectedDate,
-        booking_time: selectedTime,
-        duration: selectedService.duration,
-        total_price: selectedService.price,
-        status: "pending",
-      };
+      // Create separate booking records for each service
+      const bookingPromises = selectedService.map(async (service) => {
+        const bookingData = {
+          business_id: selectedSalon.id,
+          service_id: service.id,
+          stylist_id: selectedStylist?.id,
+          customer_user_id: user?.id || null,
+          customer_name: userDetails.name,
+          customer_email: userDetails.email,
+          customer_phone: userDetails.phone,
+          customer_notes: userDetails.notes,
+          booking_date: selectedDate,
+          booking_time: selectedTime,
+          duration: service.duration,
+          total_price: service.price,
+          status: "pending",
+        };
 
-      // Insert booking into database
-      const { data, error } = await supabase
-        .from("bookings")
-        .insert([bookingData])
-        .select()
-        .single();
+        return supabase
+          .from("bookings")
+          .insert([bookingData])
+          .select()
+          .single();
+      });
 
-      if (error) {
-        console.error("Database error:", error);
+      // Insert all bookings
+      const results = await Promise.all(bookingPromises);
+      const failedBookings = results.filter((result) => result.error);
+
+      if (failedBookings.length > 0) {
+        console.error(
+          "Database errors:",
+          failedBookings.map((r) => r.error)
+        );
         setSubmitError(
           "ჯავშნის შექმნისას მოხდა შეცდომა. გთხოვთ სცადოთ ხელახლა."
         );
         return;
       }
 
+      const data = results[0].data; // Use first booking for confirmation
+
       // Set submitted data for confirmation
+      const serviceNames = selectedService.map((s) => s.name).join(", ");
+      const totalPrice = selectedService.reduce(
+        (total, service) => total + service.price,
+        0
+      );
+
       setSubmittedData({
         bookingId: data.id,
         salon: selectedSalon?.name || "",
         name: userDetails.name,
-        service: selectedService.name,
+        service: serviceNames,
+        services: selectedService, // Keep full service details
         date: selectedDate,
         time: selectedTime,
         stylist: selectedStylist?.name || "არ არის მითითებული",
-        price: selectedService.price,
+        price: totalPrice,
       });
 
       // Move to confirmed state

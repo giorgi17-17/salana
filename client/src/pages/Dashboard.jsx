@@ -9,6 +9,7 @@ import BusinessLocations from "../components/dashboard/Locations";
 import BusinessHours from "../components/dashboard/Hours";
 import BusinessBookings from "../components/dashboard/Bookings";
 import BookingVisuals from "../components/dashboard/BookingVisuals";
+import BusinessInfo from "../components/dashboard/BusinessInfo";
 
 function Dashboard() {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -186,7 +187,7 @@ function Dashboard() {
               <p>თქვენ ჯერ არ გაქვთ რეგისტრირებული ბიზნეს ანგარიში.</p>
               <button
                 className={styles.createBusinessBtn}
-                onClick={() => navigate("/business/setup")}
+                onClick={() => navigate("/business/register")}
               >
                 ბიზნესის შექმნა
               </button>
@@ -241,28 +242,13 @@ function Dashboard() {
               )}
 
               {activeTab === "business" && (
-                <div className={styles.tabContent}>
-                  <h2>ბიზნეს ინფორმაცია</h2>
-                  <div className={styles.infoGrid}>
-                    <div className={styles.infoItem}>
-                      <label>სახელი:</label>
-                      <span>{business.name}</span>
-                    </div>
-                    <div className={styles.infoItem}>
-                      <label>ტელეფონი:</label>
-                      <span>{business.phone || "არ არის მითითებული"}</span>
-                    </div>
-                    <div className={styles.infoItem}>
-                      <label>ელ-ფოსტა:</label>
-                      <span>{business.email || "არ არის მითითებული"}</span>
-                    </div>
-                    <div className={styles.infoItem}>
-                      <label>სტატუსი:</label>
-                      {getStatusBadge(business.status)}
-                    </div>
-                  </div>
-                  <button className={styles.editBtn}>რედაქტირება</button>
-                </div>
+                <BusinessInfo
+                  business={business}
+                  onBusinessChange={(updatedBusiness) => {
+                    setBusiness(updatedBusiness);
+                    refreshBusinessData();
+                  }}
+                />
               )}
 
               {activeTab === "services" && (

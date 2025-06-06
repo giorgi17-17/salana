@@ -141,6 +141,33 @@ function DateTimeSelection({
         .toString()
         .padStart(2, "0")}:${currentMinute.toString().padStart(2, "0")}`;
 
+      // Calculate total duration for multiple services
+      const totalDuration = Array.isArray(selectedService)
+        ? selectedService.reduce(
+            (total, service) => total + service.duration,
+            0
+          )
+        : selectedService?.duration || 60;
+
+      // Check if service would end after business hours
+      const serviceEndTime = new Date(`2000-01-01T${timeString}:00`);
+      serviceEndTime.setMinutes(serviceEndTime.getMinutes() + totalDuration);
+      const businessEndTime = new Date(
+        `2000-01-01T${closeHour.toString().padStart(2, "0")}:${closeMinute
+          .toString()
+          .padStart(2, "0")}:00`
+      );
+
+      if (serviceEndTime > businessEndTime) {
+        // Don't add this time slot if service would extend beyond business hours
+        currentMinute += 30;
+        if (currentMinute >= 60) {
+          currentMinute = 0;
+          currentHour += 1;
+        }
+        continue;
+      }
+
       // Check availability for this time slot
       const availability = checkTimeSlotAvailability(timeString, bookings);
 
@@ -163,29 +190,47 @@ function DateTimeSelection({
   };
 
   const checkTimeSlotAvailability = (timeString, bookings) => {
-    const serviceDuration = selectedService?.duration || 60; // Default 60 minutes
-    const slotStart = new Date(`2000-01-01T${timeString}:00`);
-    const slotEnd = new Date(slotStart.getTime() + serviceDuration * 60000);
+    // Calculate total duration for multiple services
+    const totalDuration = Array.isArray(selectedService)
+      ? selectedService.reduce((total, service) => total + service.duration, 0)
+      : selectedService?.duration || 60; // Default 60 minutes
 
-    // Get bookings that conflict with this time slot
-    const conflictingBookings = bookings.filter((booking) => {
-      const bookingStart = new Date(`2000-01-01T${booking.booking_time}`);
-      const bookingEnd = new Date(
-        bookingStart.getTime() + booking.duration * 60000
+    const slotStart = new Date(`2000-01-01T${timeString}:00`);
+
+    // Collect all booked stylist IDs across the entire service duration
+    const allBookedStylistIds = new Set();
+
+    // Check every 30-minute slot within the service duration for conflicts
+    const slotsToCheck = Math.ceil(totalDuration / 30);
+    for (let i = 0; i < slotsToCheck; i++) {
+      const checkTime = new Date(slotStart.getTime() + i * 30 * 60000);
+      const checkEnd = new Date(
+        checkTime.getTime() + Math.min(30, totalDuration - i * 30) * 60000
       );
 
-      return slotStart < bookingEnd && slotEnd > bookingStart;
-    });
+      const conflictingBookings = bookings.filter((booking) => {
+        const bookingStart = new Date(`2000-01-01T${booking.booking_time}`);
+        const bookingEnd = new Date(
+          bookingStart.getTime() + booking.duration * 60000
+        );
 
-    // Find which stylists are booked during this time
-    const bookedStylistIds = conflictingBookings
-      .map((booking) => booking.stylist_id)
-      .filter(Boolean);
+        return checkTime < bookingEnd && checkEnd > bookingStart;
+      });
+
+      // Add booked stylists from this slot to the set
+      conflictingBookings.forEach((booking) => {
+        if (booking.stylist_id) {
+          allBookedStylistIds.add(booking.stylist_id);
+        }
+      });
+    }
+
+    // Find available stylists (those not booked during any part of the service)
     const availableStylists = stylists.filter(
-      (stylist) => !bookedStylistIds.includes(stylist.id)
+      (stylist) => !allBookedStylistIds.has(stylist.id)
     );
     const bookedStylists = stylists.filter((stylist) =>
-      bookedStylistIds.includes(stylist.id)
+      allBookedStylistIds.has(stylist.id)
     );
 
     return {

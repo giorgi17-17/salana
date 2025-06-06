@@ -71,6 +71,7 @@
   border-color: var(--primary);
   background-color: rgba(191, 168, 101, 0.1);
   box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .serviceImagePlaceholder {
@@ -82,6 +83,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .serviceIconPlaceholder {
@@ -123,6 +125,64 @@
 }
 
 .serviceDuration {
+  color: var(--text-muted);
+}
+
+/* Selected Service Badge */
+.selectedBadge {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, var(--primary), #d4af37);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: var(--shadow-md);
+  z-index: 2;
+}
+
+/* Selection Summary */
+.selectionSummary {
+  background: linear-gradient(
+    135deg,
+    rgba(191, 168, 101, 0.1),
+    rgba(212, 175, 55, 0.1)
+  );
+  border: 1px solid rgba(191, 168, 101, 0.3);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.summaryTitle {
+  color: var(--primary);
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.summaryDetails {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.totalPrice {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.totalDuration {
+  font-size: 1rem;
   color: var(--text-muted);
 }
 
@@ -472,6 +532,47 @@
 .summaryValue {
   width: 60%;
   color: var(--text);
+}
+
+/* Services List for Multiple Services */
+.servicesList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.serviceItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm);
+  background-color: rgba(191, 168, 101, 0.1);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+  margin-bottom: var(--spacing-xs);
+}
+
+.serviceItem:last-child {
+  margin-bottom: 0;
+}
+
+.serviceItem .serviceName {
+  font-weight: 500;
+  color: var(--primary);
+  flex: 1;
+}
+
+.serviceItem .servicePrice {
+  font-weight: 600;
+  color: var(--primary);
+  margin-left: var(--spacing-sm);
+}
+
+.serviceItem .serviceDuration {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-left: var(--spacing-xs);
 }
 
 .policyNote {

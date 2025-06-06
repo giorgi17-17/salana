@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { getImageUrl } from "../lib/storageUtils";
 import styles from "../styles/pages/SalonListing.module.css";
 import buttonStyles from "../styles/components/Button.module.css";
 
@@ -215,11 +216,26 @@ function SalonListing() {
 
 // SalonCard component
 function SalonCard({ salon }) {
+  const imageUrl = getImageUrl(salon.image);
+
   return (
     <div className={styles.salonCard}>
       <div className={styles.salonImageContainer}>
         <div className={styles.salonImagePlaceholder}>
-          {/* Replace with actual image later */}
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={salon.name}
+              className={styles.salonImage}
+              onError={(e) => {
+                e.target.style.display = "none";
+              }}
+            />
+          ) : (
+            <div className={styles.noImagePlaceholder}>
+              <span>სურათი არ არის</span>
+            </div>
+          )}
         </div>
         <div className={styles.salonRating}>
           <span className={styles.ratingValue}>{salon.rating}</span>

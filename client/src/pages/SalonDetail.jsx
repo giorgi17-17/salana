@@ -1,5 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabaseClient";
+import { getImageUrl } from "../lib/storageUtils";
 import salons from "../data/salons";
 import styles from "../styles/pages/SalonDetail.module.css";
 import buttonStyles from "../styles/components/Button.module.css";
@@ -11,11 +13,88 @@ function SalonDetail() {
   const [selectedServiceCategory, setSelectedServiceCategory] = useState("all");
 
   useEffect(() => {
-    const foundSalon = salons.find((s) => s.id === salonId);
-    if (foundSalon) {
-      setSalon(foundSalon);
-    }
+    fetchSalonData();
   }, [salonId]);
+
+  const fetchSalonData = async () => {
+    try {
+      // First try to fetch from database
+      const { data: business, error } = await supabase
+        .from("businesses")
+        .select(
+          `
+          *,
+          business_locations(*),
+          business_services(*),
+          business_stylists(*)
+        `
+        )
+        .eq("id", salonId)
+        .eq("status", "approved")
+        .single();
+
+      if (!error && business) {
+        // Transform database data to match expected format
+        const transformedSalon = {
+          id: business.id,
+          name: business.name,
+          description: business.description || "",
+          address:
+            business.business_locations?.[0]?.address ||
+            "მისამართი მითითებული არ არის",
+          phone: business.phone || "",
+          email: business.email || "",
+          rating: business.rating || 0,
+          reviewCount: business.review_count || 0,
+          featured: business.featured || false,
+          image: business.image || "",
+          services:
+            business.business_services?.map((service) => ({
+              id: service.id,
+              name: service.name,
+              price: service.price,
+              duration: service.duration,
+              description: service.description,
+            })) || [],
+          stylists:
+            business.business_stylists?.map((stylist) => ({
+              id: stylist.id,
+              name: stylist.name,
+              specialty: stylist.specialty,
+              experience: stylist.experience,
+            })) || [],
+          locations:
+            business.business_locations?.map((location) => ({
+              id: location.id,
+              name: location.name,
+              address: location.address,
+              location_url: location.location_url,
+              image: location.image,
+            })) || [],
+          openHours: {
+            mon_fri: "10:00 - 20:00", // Default hours, should be in database
+            sat: "11:00 - 19:00",
+            sun: "დასვენება",
+          },
+        };
+
+        setSalon(transformedSalon);
+      } else {
+        // Fallback to mock data if not found in database
+        const foundSalon = salons.find((s) => s.id === salonId);
+        if (foundSalon) {
+          setSalon(foundSalon);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching salon data:", error);
+      // Fallback to mock data
+      const foundSalon = salons.find((s) => s.id === salonId);
+      if (foundSalon) {
+        setSalon(foundSalon);
+      }
+    }
+  };
 
   // If salon not found
   if (!salon) {
@@ -101,7 +180,20 @@ function SalonDetail() {
         <div className={styles.heroSection}>
           <div className={styles.salonImageContainer}>
             <div className={styles.salonImagePlaceholder}>
-              {/* Replace with actual image later */}
+              {salon.image ? (
+                <img
+                  src={getImageUrl(salon.image)}
+                  alt={salon.name}
+                  className={styles.salonHeroImage}
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                  }}
+                />
+              ) : (
+                <div className={styles.noImagePlaceholder}>
+                  <span>სურათი არ არის</span>
+                </div>
+              )}
             </div>
             <div className={styles.ratingBadge}>
               <span className={styles.rating}>⭐ {salon.rating}</span>
@@ -118,14 +210,14 @@ function SalonDetail() {
             <div className={styles.quickActions}>
               <Link to={`/booking/${salon.id}`}>
                 <button
-                  className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.large}`}
+                  className={`${buttonStyles.button} ${buttonStyles.primary} `}
                 >
                   დაჯავშნე ახლავე
                 </button>
               </Link>
               <a href={`tel:${salon.phone}`}>
                 <button
-                  className={`${buttonStyles.button} ${buttonStyles.secondary} ${buttonStyles.large}`}
+                  className={`${buttonStyles.button} ${buttonStyles.secondary} `}
                 >
                   დარეკვა
                 </button>

@@ -146,3 +146,24 @@ export function generateUniqueFileName(originalName) {
   const fileExt = originalName.split(".").pop();
   return `${timestamp}_${randomString}.${fileExt}`;
 }
+
+/**
+ * Get public URL for an image in Supabase storage
+ * @param {string} imagePath - The full path to the image in storage or full URL
+ * @returns {string|null} - The public URL or null if no path provided
+ */
+export function getImageUrl(imagePath) {
+  if (!imagePath) return null;
+
+  // If it's already a full URL, return as is
+  if (imagePath.startsWith("http")) {
+    return imagePath;
+  }
+
+  // Get public URL from Supabase storage
+  const { data } = supabase.storage
+    .from("salana-storage")
+    .getPublicUrl(imagePath);
+
+  return data?.publicUrl || null;
+}
