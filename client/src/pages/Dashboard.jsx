@@ -8,6 +8,7 @@ import BusinessStylists from "../components/dashboard/Stylists";
 import BusinessLocations from "../components/dashboard/Locations";
 import BusinessHours from "../components/dashboard/Hours";
 import BusinessBookings from "../components/dashboard/Bookings";
+import BookingVisuals from "../components/dashboard/BookingVisuals";
 
 function Dashboard() {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -167,6 +168,14 @@ function Dashboard() {
             >
               ჯავშნები
             </button>
+            <button
+              className={`${styles.navItem} ${
+                activeTab === "booking-visuals" ? styles.navItemActive : ""
+              }`}
+              onClick={() => setActiveTab("booking-visuals")}
+            >
+              კალენდარი
+            </button>
           </nav>
         </div>
 
@@ -293,6 +302,10 @@ function Dashboard() {
                   businessId={business.id}
                   onBookingsChange={refreshBusinessData}
                 />
+              )}
+
+              {activeTab === "booking-visuals" && (
+                <BookingVisuals businessId={business.id} />
               )}
             </>
           )}
