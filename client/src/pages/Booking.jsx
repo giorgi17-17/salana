@@ -243,6 +243,8 @@ function Booking() {
             setSelectedTime={setSelectedTime}
             nextStep={nextStep}
             prevStep={prevStep}
+            businessId={selectedSalon?.id}
+            selectedService={selectedService}
           />
         );
       case 3:
@@ -255,6 +257,9 @@ function Booking() {
             nextStep={nextStep}
             prevStep={prevStep}
             selectedService={selectedService}
+            selectedDate={selectedDate}
+            selectedTime={selectedTime}
+            businessId={selectedSalon?.id}
             stylists={selectedSalon?.stylists}
           />
         );

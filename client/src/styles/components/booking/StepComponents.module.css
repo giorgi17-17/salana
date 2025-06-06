@@ -175,7 +175,7 @@
 
 .timeGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: var(--spacing-sm);
 }
 
@@ -187,15 +187,24 @@
   cursor: pointer;
   border: 1px solid rgba(191, 168, 101, 0.2);
   transition: all var(--transition-fast);
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 .timeSlot:hover:not(.unavailable) {
   border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .timeSlot.selected {
   border-color: var(--primary);
   background-color: rgba(191, 168, 101, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .timeSlot.unavailable {
@@ -203,6 +212,58 @@
   background-color: var(--background-darker);
   cursor: not-allowed;
   text-decoration: line-through;
+}
+
+.timeSlotTime {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.availableStylists {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stylistIndicator {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  color: var(--background-darker);
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.moreStylists {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.noTimeSlots {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-muted);
+  font-style: italic;
+  background-color: var(--background-lighter);
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(191, 168, 101, 0.2);
+}
+
+.loading {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-muted);
+  font-size: 1.1rem;
 }
 
 /* Stylist Selection Step */
@@ -224,6 +285,7 @@
   cursor: pointer;
   border: 1px solid rgba(191, 168, 101, 0.2);
   padding: var(--spacing-md);
+  position: relative;
 }
 
 .stylistCard:hover {
@@ -236,6 +298,60 @@
   border-color: var(--primary);
   background-color: rgba(191, 168, 101, 0.1);
   box-shadow: var(--shadow-md);
+}
+
+.stylistCard.unavailable {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--background-darker);
+}
+
+.stylistCard.unavailable:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(191, 168, 101, 0.2);
+}
+
+.stylistAvailabilityBadge {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  z-index: 1;
+}
+
+.availableBadge {
+  background-color: #22c55e;
+  color: white;
+  padding: 4px 8px;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.unavailableBadge {
+  background-color: #ef4444;
+  color: white;
+  padding: 4px 8px;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.selectedTimeInfo {
+  background-color: rgba(191, 168, 101, 0.1);
+  border: 1px solid rgba(191, 168, 101, 0.3);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.selectedTimeInfo h3 {
+  margin: 0;
+  color: var(--primary);
+  font-size: 1.1rem;
 }
 
 .stylistImage {

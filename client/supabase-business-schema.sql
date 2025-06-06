@@ -190,6 +190,57 @@ CREATE POLICY "Users can manage own business stylists" ON public.business_stylis
         )
     );
 
+-- 6. Bookings table
+CREATE TABLE public.bookings (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    business_id UUID REFERENCES public.businesses(id) ON DELETE CASCADE NOT NULL,
+    service_id UUID REFERENCES public.business_services(id) ON DELETE SET NULL,
+    stylist_id UUID REFERENCES public.business_stylists(id) ON DELETE SET NULL,
+    customer_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    customer_name VARCHAR(255) NOT NULL,
+    customer_email VARCHAR(255) NOT NULL,
+    customer_phone VARCHAR(50) NOT NULL,
+    customer_notes TEXT,
+    booking_date DATE NOT NULL,
+    booking_time TIME NOT NULL,
+    duration INTEGER NOT NULL, -- in minutes
+    total_price DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'in_progress', 'completed', 'cancelled', 'no_show')),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TRIGGER update_bookings_updated_at 
+    BEFORE UPDATE ON public.bookings 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Bookings: Users can view bookings for their business or their own bookings
+ALTER TABLE public.bookings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Business owners can view their bookings" ON public.bookings
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM public.businesses 
+            WHERE businesses.id = bookings.business_id 
+            AND businesses.user_id = auth.uid()
+        )
+    );
+
+CREATE POLICY "Customers can view their own bookings" ON public.bookings
+    FOR SELECT USING (customer_user_id = auth.uid());
+
+CREATE POLICY "Anyone can create bookings" ON public.bookings
+    FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Business owners can update their bookings" ON public.bookings
+    FOR UPDATE USING (
+        EXISTS (
+            SELECT 1 FROM public.businesses 
+            WHERE businesses.id = bookings.business_id 
+            AND businesses.user_id = auth.uid()
+        )
+    );
+
 -- 8. Indexes for better performance
 CREATE INDEX idx_businesses_user_id ON public.businesses(user_id);
 CREATE INDEX idx_businesses_status ON public.businesses(status);
@@ -198,6 +249,9 @@ CREATE INDEX idx_business_locations_business_id ON public.business_locations(bus
 CREATE INDEX idx_business_hours_business_id ON public.business_hours(business_id);
 CREATE INDEX idx_business_services_business_id ON public.business_services(business_id);
 CREATE INDEX idx_business_stylists_business_id ON public.business_stylists(business_id);
+CREATE INDEX idx_bookings_business_id ON public.bookings(business_id);
+CREATE INDEX idx_bookings_booking_date ON public.bookings(booking_date);
+CREATE INDEX idx_bookings_customer_user_id ON public.bookings(customer_user_id);
 
 -- 9. Sample data insert (based on your salon data)
 INSERT INTO public.businesses (user_id, name, description, phone, email, rating, review_count, featured, image, status) 

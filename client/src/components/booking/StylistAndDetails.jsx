@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "../../lib/supabaseClient";
 import styles from "../../styles/components/booking/StepComponents.module.css";
 import buttonStyles from "../../styles/components/Button.module.css";
 
@@ -10,11 +11,101 @@ function StylistAndDetails({
   nextStep,
   prevStep,
   selectedService,
+  selectedDate,
+  selectedTime,
+  businessId,
   stylists = [],
 }) {
   const [error, setError] = useState("");
+  const [stylistAvailability, setStylistAvailability] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (selectedDate && selectedTime && stylists.length > 0) {
+      checkStylistAvailability();
+    }
+  }, [selectedDate, selectedTime, stylists]);
+
+  const checkStylistAvailability = async () => {
+    if (!selectedDate || !selectedTime || !businessId) return;
+
+    try {
+      setLoading(true);
+
+      // Fetch existing bookings for the selected date and time
+      const serviceDuration = selectedService?.duration || 60;
+      const { data: bookings, error } = await supabase
+        .from("bookings")
+        .select("stylist_id, booking_time, duration")
+        .eq("business_id", businessId)
+        .eq("booking_date", selectedDate)
+        .in("status", ["pending", "confirmed", "in_progress"]);
+
+      if (error) throw error;
+
+      // Check each stylist's availability
+      const availability = {};
+      stylists.forEach((stylist) => {
+        availability[stylist.id] = checkStylistTimeConflict(
+          stylist.id,
+          selectedTime,
+          serviceDuration,
+          bookings || []
+        );
+      });
+
+      setStylistAvailability(availability);
+    } catch (error) {
+      console.error("Error checking stylist availability:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkStylistTimeConflict = (
+    stylistId,
+    timeString,
+    duration,
+    bookings
+  ) => {
+    const slotStart = new Date(`2000-01-01T${timeString}:00`);
+    const slotEnd = new Date(slotStart.getTime() + duration * 60000);
+
+    // Find bookings for this stylist
+    const stylistBookings = bookings.filter(
+      (booking) => booking.stylist_id === stylistId
+    );
+
+    // Check for conflicts
+    const hasConflict = stylistBookings.some((booking) => {
+      const bookingStart = new Date(`2000-01-01T${booking.booking_time}`);
+      const bookingEnd = new Date(
+        bookingStart.getTime() + booking.duration * 60000
+      );
+
+      return slotStart < bookingEnd && slotEnd > bookingStart;
+    });
+
+    return {
+      available: !hasConflict,
+      conflictingBooking: hasConflict
+        ? stylistBookings.find((booking) => {
+            const bookingStart = new Date(`2000-01-01T${booking.booking_time}`);
+            const bookingEnd = new Date(
+              bookingStart.getTime() + booking.duration * 60000
+            );
+            return slotStart < bookingEnd && slotEnd > bookingStart;
+          })
+        : null,
+    };
+  };
 
   const handleStylistSelect = (stylist) => {
+    const availability = stylistAvailability[stylist.id];
+    if (availability && !availability.available) {
+      setError(`${stylist.name} დაკავებულია ამ დროს`);
+      return;
+    }
     setSelectedStylist(stylist);
     setError("");
   };
@@ -44,6 +135,17 @@ function StylistAndDetails({
       return;
     }
 
+    // Check if selected stylist is still available
+    if (selectedStylist) {
+      const availability = stylistAvailability[selectedStylist.id];
+      if (availability && !availability.available) {
+        setError(
+          `${selectedStylist.name} აღარ არის ხელმისაწვდომი ამ დროს. გთხოვთ აირჩიოთ სხვა სტილისტი.`
+        );
+        return;
+      }
+    }
+
     nextStep();
   };
 
@@ -55,8 +157,15 @@ function StylistAndDetails({
     return /^\d{9}$/.test(phone.replace(/\s+/g, ""));
   };
 
-  // Use stylists from the business or show message if none available
-  const availableStylists = stylists || [];
+  // Sort stylists: available first, then unavailable
+  const sortedStylists = [...stylists].sort((a, b) => {
+    const aAvailable = stylistAvailability[a.id]?.available !== false;
+    const bAvailable = stylistAvailability[b.id]?.available !== false;
+
+    if (aAvailable && !bAvailable) return -1;
+    if (!aAvailable && bAvailable) return 1;
+    return 0;
+  });
 
   return (
     <div className={styles.stepContainer}>
@@ -67,38 +176,70 @@ function StylistAndDetails({
         აირჩიეთ სასურველი სტილისტი და შეავსეთ თქვენი საკონტაქტო ინფორმაცია
       </p>
 
+      {selectedDate && selectedTime && (
+        <div className={styles.selectedTimeInfo}>
+          <h3>
+            არჩეული დრო: {selectedTime} - {selectedDate}
+          </h3>
+        </div>
+      )}
+
       {error && <div className={styles.error}>{error}</div>}
 
       <div className={styles.stylistSelection}>
         <h3 className={styles.sectionTitle}>
           აირჩიეთ სტილისტი (არასავალდებულო)
         </h3>
-        {availableStylists.length > 0 ? (
+        {loading && (
+          <div className={styles.loading}>
+            მოწმდება სტილისტების ხელმისაწვდომობა...
+          </div>
+        )}
+        {sortedStylists.length > 0 ? (
           <div className={styles.stylistGrid}>
-            {availableStylists.map((stylist) => (
-              <div
-                key={stylist.id}
-                className={`${styles.stylistCard} ${
-                  selectedStylist?.id === stylist.id ? styles.selected : ""
-                }`}
-                onClick={() => handleStylistSelect(stylist)}
-              >
-                <div className={styles.stylistImage}>
-                  {/* Replace with actual image later */}
-                  <div className={styles.stylistImagePlaceholder}></div>
+            {sortedStylists.map((stylist) => {
+              const availability = stylistAvailability[stylist.id];
+              const isAvailable = availability?.available !== false;
+
+              return (
+                <div
+                  key={stylist.id}
+                  className={`${styles.stylistCard} ${
+                    selectedStylist?.id === stylist.id ? styles.selected : ""
+                  } ${!isAvailable ? styles.unavailable : ""}`}
+                  onClick={() => handleStylistSelect(stylist)}
+                >
+                  <div className={styles.stylistAvailabilityBadge}>
+                    {isAvailable ? (
+                      <span className={styles.availableBadge}>
+                        ხელმისაწვდომი
+                      </span>
+                    ) : (
+                      <span className={styles.unavailableBadge}>
+                        დაკავებული
+                      </span>
+                    )}
+                  </div>
+
+                  <div className={styles.stylistImage}>
+                    <div className={styles.stylistImagePlaceholder}></div>
+                  </div>
+
+                  <div className={styles.stylistInfo}>
+                    <h4 className={styles.stylistName}>{stylist.name}</h4>
+                    <p className={styles.stylistSpecialty}>
+                      {stylist.specialty}
+                    </p>
+                    <p className={styles.stylistExperience}>
+                      გამოცდილება: {stylist.experience}
+                    </p>
+                    {stylist.bio && (
+                      <p className={styles.stylistBio}>{stylist.bio}</p>
+                    )}
+                  </div>
                 </div>
-                <div className={styles.stylistInfo}>
-                  <h4 className={styles.stylistName}>{stylist.name}</h4>
-                  <p className={styles.stylistSpecialty}>{stylist.specialty}</p>
-                  <p className={styles.stylistExperience}>
-                    გამოცდილება: {stylist.experience}
-                  </p>
-                  {stylist.bio && (
-                    <p className={styles.stylistBio}>{stylist.bio}</p>
-                  )}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className={styles.noStylists}>
