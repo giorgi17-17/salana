@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabaseClient";
+import ImageUpload from "../common/ImageUpload";
 import styles from "../../styles/components/BusinessLocations.module.css";
 import {
   Plus,
@@ -412,18 +413,15 @@ function BusinessLocations({
               <div className={styles.formGroup}>
                 <label className={styles.label}>
                   <Camera size={16} />
-                  სურათის URL (არასავალდებულო)
+                  ლოკაციის სურათი (არასავალდებულო)
                 </label>
-                <input
-                  type="url"
-                  name="image"
-                  value={formData.image}
-                  onChange={handleInputChange}
-                  className={`${styles.input} ${
-                    errors.image ? styles.inputError : ""
-                  }`}
-                  placeholder="https://example.com/photo.jpg"
-                  disabled={loading}
+                <ImageUpload
+                  currentImageUrl={formData.image}
+                  onImageChange={(url) =>
+                    setFormData({ ...formData, image: url })
+                  }
+                  folder="locations"
+                  placeholder="Upload location image"
                 />
                 {errors.image && (
                   <span className={styles.errorMessage}>{errors.image}</span>

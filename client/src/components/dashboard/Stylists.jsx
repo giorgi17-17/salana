@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabaseClient";
+import ImageUpload from "../common/ImageUpload";
 import styles from "../../styles/components/BusinessStylists.module.css";
 import {
   Plus,
@@ -363,16 +364,15 @@ function BusinessStylists({
               <div className={styles.formGroup}>
                 <label className={styles.label}>
                   <Camera size={16} />
-                  ფოტოს URL (არასავალდებულო)
+                  სტილისტის ფოტო (არასავალდებულო)
                 </label>
-                <input
-                  type="url"
-                  name="image"
-                  value={formData.image}
-                  onChange={handleInputChange}
-                  className={styles.input}
-                  placeholder="https://example.com/photo.jpg"
-                  disabled={loading}
+                <ImageUpload
+                  currentImageUrl={formData.image}
+                  onImageChange={(url) =>
+                    setFormData({ ...formData, image: url })
+                  }
+                  folder="stylists"
+                  placeholder="Upload stylist photo"
                 />
               </div>
 
