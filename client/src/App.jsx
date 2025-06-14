@@ -19,6 +19,8 @@ import SalonDetail from "./pages/SalonDetail";
 import BusinessLogin from "./pages/BusinessLogin";
 import BusinessRegister from "./pages/BusinessRegister";
 import Dashboard from "./pages/Dashboard";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentFail from "./pages/PaymentFail";
 import "./styles/globals.css";
 import "./styles/pages/Booking.css";
 import "./styles/pages/Pricing.module.css";
@@ -47,6 +49,8 @@ function AppContent() {
           <Route path="/business/login" element={<BusinessLogin />} />
           <Route path="/business/register" element={<BusinessRegister />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-fail" element={<PaymentFail />} />
         </Routes>
       </main>
       {!isDashboard && <Footer />}

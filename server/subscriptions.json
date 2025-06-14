@@ -1,0 +1,28 @@
+[
+  {
+    "id": "60957a71-c49d-4ce3-998e-401a9a8b5288",
+    "userId": "user123",
+    "orderId": "4e1ec47d-86bb-4a04-96d8-75101437255b",
+    "amount": 29,
+    "status": "pending",
+    "createdAt": "2025-06-14T22:45:22.025Z"
+  },
+  {
+    "id": "6fd65949-a9c6-43c0-98d4-2b9e0062f9be",
+    "userId": "user123",
+    "orderId": "783fb8e3-4273-4f61-a9ab-5056164b01a7",
+    "amount": 1,
+    "status": "active",
+    "createdAt": "2025-06-14T22:46:50.387Z",
+    "nextPayment": "2025-07-14T22:47:37.294Z"
+  },
+  {
+    "id": "fad17064-c9b2-4a84-b1ad-bd0e818e5564",
+    "userId": "user123",
+    "orderId": "9099aafd-6e6b-49d5-810a-4ac7c3afb19e",
+    "amount": 1,
+    "status": "active",
+    "createdAt": "2025-06-14T22:59:30.099Z",
+    "nextPayment": "2025-06-15T23:00:31.392Z"
+  }
+]

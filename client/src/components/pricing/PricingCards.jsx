@@ -24,7 +24,7 @@ function PricingCards() {
     },
     {
       name: "პროფესიონალი",
-      price: billingPeriod === "monthly" ? "₾29" : "₾290",
+      price: billingPeriod === "monthly" ? "₾1" : "₾10",
       period: billingPeriod === "monthly" ? "/თვე" : "/წელი",
       description: "იდეალურია მცირე სალონებისა და ფრილანსერებისთვის",
       popular: true,
@@ -59,6 +59,49 @@ function PricingCards() {
       buttonClass: `${styles.pricingCardButton} ${styles.pricingCardButtonOutlined}`,
     },
   ];
+  const handlePay = async (plan) => {
+    try {
+      // Skip payment for free plan
+      if (plan.name === "დამწყები") {
+        alert("უფასო გეგმა - გადახდა არ არის საჭირო!");
+        return;
+      }
+
+      // Get amount based on plan and billing period
+      let amount;
+      if (plan.name === "პროფესიონალი") {
+        amount = billingPeriod === "monthly" ? 1 : 10;
+      } else if (plan.name === "ბიზნეს+") {
+        amount = billingPeriod === "monthly" ? 70 : 700;
+      }
+
+      console.log("Creating subscription order for:", plan.name, amount);
+
+      const res = await fetch("http://localhost:3001/api/create-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: amount,
+          userId: "user123", // TODO: Get from auth context
+          isSubscription: true,
+          productId: plan.name,
+          externalOrderId: `${plan.name}-${Date.now()}`,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      } else {
+        alert("Failed to redirect to payment");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong");
+    }
+  };
 
   return (
     <section className={styles.pricingCards}>
@@ -124,7 +167,12 @@ function PricingCards() {
                 </ul>
               </div>
 
-              <button className={plan.buttonClass}>{plan.buttonText}</button>
+              <button
+                className={plan.buttonClass}
+                onClick={() => handlePay(plan)}
+              >
+                {plan.name === "დამწყები" ? "დაიწყეთ უფასოდ" : "ყიდვა"}
+              </button>
             </div>
           ))}
         </div>
