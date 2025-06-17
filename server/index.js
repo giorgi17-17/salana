@@ -3,9 +3,15 @@ import cors from "cors";
 import axios from "axios";
 import dotenv from "dotenv";
 import { v4 as uuidv4 } from "uuid";
-import fs from "fs";
+import { createClient } from "@supabase/supabase-js";
 
 dotenv.config();
+
+// Initialize Supabase client
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
 
 const app = express();
 
@@ -95,9 +101,8 @@ app.post("/api/create-order", async (req, res) => {
     const { id: orderId, _links } = orderResponse.data;
 
     // Save card for subscriptions if needed
-    if (isSubscription && userId) {
+    if (isSubscription) {
       try {
-        // Try to save card for subscriptions
         await axios.put(`${API_BASE}/orders/${orderId}/subscriptions`, null, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -107,29 +112,36 @@ app.post("/api/create-order", async (req, res) => {
         console.log("✅ Card saved for subscriptions");
       } catch (subscriptionError) {
         console.log(
-          "⚠️ Subscription endpoint failed, but continuing with manual subscription:",
+          "⚠️ Subscription endpoint failed, but continuing:",
           subscriptionError.response?.data?.message || subscriptionError.message
         );
       }
+    }
 
-      // Store subscription data regardless of BOG subscription call
-      const subscriptions = JSON.parse(
-        fs.readFileSync("subscriptions.json", "utf8")
-      );
-      const newSubscription = {
-        id: uuidv4(),
-        userId,
-        orderId,
-        amount,
-        status: "pending",
-        createdAt: new Date().toISOString(),
-      };
-      subscriptions.push(newSubscription);
-      fs.writeFileSync(
-        "subscriptions.json",
-        JSON.stringify(subscriptions, null, 2)
-      );
-      console.log("🔄 Subscription created:", newSubscription);
+    // Store payment data in Supabase for all payments
+    if (userId) {
+      const { data: payment, error } = await supabase
+        .from("payments")
+        .insert({
+          business_id: userId, // This is now the business_id from frontend
+          amount,
+          transaction_id: orderId,
+          status: "pending",
+          payment_method: "credit_card",
+          payment_processor: "bog",
+          description: isSubscription
+            ? "Subscription payment"
+            : "One-time payment",
+          metadata: { isSubscription, external_order_id: externalOrderId },
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error("❌ Failed to create payment record:", error);
+      } else {
+        console.log("🔄 Payment created:", payment);
+      }
     }
 
     res.json({
@@ -154,21 +166,21 @@ app.post("/api/payment-callback", async (req, res) => {
       const { order_id, order_status } = req.body.body;
 
       if (order_id && order_status?.key === "completed") {
-        const subscriptions = JSON.parse(
-          fs.readFileSync("subscriptions.json", "utf8")
-        );
-        const index = subscriptions.findIndex((s) => s.orderId === order_id);
+        // Update payment status in Supabase
+        const { data: payment, error } = await supabase
+          .from("payments")
+          .update({
+            status: "completed",
+            processed_at: new Date().toISOString(),
+          })
+          .eq("transaction_id", order_id)
+          .select()
+          .single();
 
-        if (index !== -1) {
-          subscriptions[index].status = "active";
-          subscriptions[index].nextPayment = new Date(
-            Date.now() + 1 * 24 * 60 * 60 * 1000
-          ).toISOString(); // Next payment in 1 day
-          fs.writeFileSync(
-            "subscriptions.json",
-            JSON.stringify(subscriptions, null, 2)
-          );
-          console.log("✅ Subscription activated:", subscriptions[index]);
+        if (error) {
+          console.error("❌ Failed to update payment:", error);
+        } else {
+          console.log("✅ Payment completed:", payment);
         }
       }
     }
@@ -197,17 +209,95 @@ app.get("/api/payment-status/:orderId", async (req, res) => {
   }
 });
 
-// Get all subscriptions
-app.get("/api/subscriptions", (req, res) => {
+// Get all payments
+app.get("/api/payments", async (req, res) => {
   try {
-    const subscriptions = JSON.parse(
-      fs.readFileSync("subscriptions.json", "utf8")
-    );
-    res.json(subscriptions);
+    const { data: payments, error } = await supabase
+      .from("payments")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("❌ Failed to fetch payments:", error);
+      res.status(500).json({ error: "Failed to fetch payments" });
+    } else {
+      res.json(payments);
+    }
   } catch (e) {
-    res.json([]);
+    console.error("Error fetching payments:", e);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
+
+// Process recurring subscriptions cron job
+setInterval(async () => {
+  try {
+    console.log("⏰ Processing subscription renewals...");
+
+    // Find active subscriptions that need renewal (older than 30 days)
+    const thirtyDaysAgo = new Date(
+      Date.now() - 30 * 24 * 60 * 60 * 1000
+    ).toISOString();
+
+    const { data: subscriptions, error } = await supabase
+      .from("payments")
+      .select("*, businesses(user_id)")
+      .eq("status", "completed")
+      .eq("metadata->isSubscription", true)
+      .lt("created_at", thirtyDaysAgo);
+
+    if (error) {
+      console.error("❌ Failed to fetch subscriptions:", error);
+      return;
+    }
+
+    console.log(
+      `📊 Found ${subscriptions?.length || 0} subscriptions due for renewal`
+    );
+
+    for (const subscription of subscriptions || []) {
+      // Create renewal payment record
+      const { data: renewal, error: renewalError } = await supabase
+        .from("payments")
+        .insert({
+          business_id: subscription.business_id,
+          amount: subscription.amount,
+          status: "pending",
+          payment_method: "credit_card",
+          payment_processor: "bog",
+          description: "Subscription renewal",
+          metadata: {
+            isSubscription: true,
+            parentPaymentId: subscription.id,
+            renewalDate: new Date().toISOString(),
+          },
+        });
+
+      if (renewalError) {
+        console.error(
+          `❌ Failed to create renewal for ${subscription.id}:`,
+          renewalError
+        );
+      } else {
+        console.log(
+          `✅ Created renewal payment for business ${subscription.business_id}`
+        );
+      }
+    }
+  } catch (error) {
+    console.error("❌ Subscription renewal cron failed:", error);
+  }
+}, 24 * 60 * 60 * 1000); // Daily
+
+// Keep Render service alive
+setInterval(async () => {
+  try {
+    await axios.get(process.env.RENDER_URL);
+    console.log("⏰ Keep-alive ping sent");
+  } catch (error) {
+    console.error("Keep-alive failed:", error.message);
+  }
+}, 14 * 60 * 1000); // Every 14 minutes
 
 const PORT = 3001;
 app.listen(PORT, () =>

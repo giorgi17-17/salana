@@ -1,8 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { supabase } from "../../lib/supabaseClient";
 import styles from "../../styles/pages/Pricing.module.css";
 
 function PricingCards() {
   const [billingPeriod, setBillingPeriod] = useState("monthly");
+  const [businessId, setBusinessId] = useState(null);
+  const { user } = useAuth();
+
+  // Get business ID for the current user
+  useEffect(() => {
+    const fetchBusinessId = async () => {
+      if (!user) return;
+
+      try {
+        const { data, error } = await supabase
+          .from("businesses")
+          .select("id")
+          .eq("user_id", user.id)
+          .single();
+
+        if (error) {
+          console.error("Error fetching business:", error);
+        } else {
+          setBusinessId(data?.id);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchBusinessId();
+  }, [user]);
 
   const plans = [
     {
@@ -67,6 +96,17 @@ function PricingCards() {
         return;
       }
 
+      // Check if user is authenticated and has a business
+      if (!user) {
+        alert("გთხოვთ შედით ანგარიშში");
+        return;
+      }
+
+      if (!businessId) {
+        alert("ბიზნეს ანგარიში ვერ მოიძებნა. გთხოვთ შექმნათ ბიზნეს პროფილი.");
+        return;
+      }
+
       // Get amount based on plan and billing period
       let amount;
       if (plan.name === "პროფესიონალი") {
@@ -84,7 +124,7 @@ function PricingCards() {
         },
         body: JSON.stringify({
           amount: amount,
-          userId: "user123", // TODO: Get from auth context
+          userId: businessId, // Using actual business ID from auth
           isSubscription: true,
           productId: plan.name,
           externalOrderId: `${plan.name}-${Date.now()}`,
